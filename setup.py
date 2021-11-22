@@ -42,7 +42,11 @@ def no_cythonize(extensions, **_ignore):
 
 
 ext_modules = [
-    Extension("editdistpy.levenshtein", ["editdistpy/levenshtein.pyx"]),
+    Extension(
+        "editdistpy.levenshtein",
+        ["editdistpy/_levenshtein.cpp", "editdistpy/levenshtein.pyx"],
+        include_dirs=["./editdistpy"],
+    ),
     Extension("editdistpy.damerau_osa", ["editdistpy/damerau_osa.pyx"]),
 ]
 
