@@ -4,20 +4,20 @@
 {
     "distutils": {
         "depends": [
-            "editdistpy/_levenshtein.hpp"
+            "editdistpy/_damerau_osa.hpp"
         ],
         "include_dirs": [
             "editdistpy",
             "./editdistpy"
         ],
         "language": "c++",
-        "name": "editdistpy.levenshtein",
+        "name": "editdistpy.damerau_osa",
         "sources": [
-            "editdistpy/levenshtein.pyx",
-            "editdistpy/_levenshtein.cpp"
+            "editdistpy/damerau_osa.pyx",
+            "editdistpy/_damerau_osa.cpp"
         ]
     },
-    "module_name": "editdistpy.levenshtein"
+    "module_name": "editdistpy.damerau_osa"
 }
 END: Cython Metadata */
 
@@ -647,10 +647,10 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__editdistpy__levenshtein
-#define __PYX_HAVE_API__editdistpy__levenshtein
+#define __PYX_HAVE__editdistpy__damerau_osa
+#define __PYX_HAVE_API__editdistpy__damerau_osa
 /* Early includes */
-#include "_levenshtein.hpp"
+#include "_damerau_osa.hpp"
 #include "ios"
 #include "new"
 #include "stdexcept"
@@ -863,7 +863,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "editdistpy/levenshtein.pyx",
+  "editdistpy/damerau_osa.pyx",
 };
 
 /*--- Type declarations ---*/
@@ -1118,14 +1118,14 @@ static int __Pyx_check_binary_version(void);
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
-/* Module declarations from 'editdistpy.levenshtein' */
-static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
-static int __pyx_f_10editdistpy_11levenshtein_distance_max(PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
-#define __Pyx_MODULE_NAME "editdistpy.levenshtein"
-extern int __pyx_module_is_main_editdistpy__levenshtein;
-int __pyx_module_is_main_editdistpy__levenshtein = 0;
+/* Module declarations from 'editdistpy.damerau_osa' */
+static int __pyx_f_10editdistpy_11damerau_osa_distance(PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
+static int __pyx_f_10editdistpy_11damerau_osa_distance_max(PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
+#define __Pyx_MODULE_NAME "editdistpy.damerau_osa"
+extern int __pyx_module_is_main_editdistpy__damerau_osa;
+int __pyx_module_is_main_editdistpy__damerau_osa = 0;
 
-/* Implementation of 'editdistpy.levenshtein' */
+/* Implementation of 'editdistpy.damerau_osa' */
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
@@ -1146,11 +1146,11 @@ static PyObject *__pyx_n_s_start;
 static PyObject *__pyx_n_s_string_1;
 static PyObject *__pyx_n_s_string_2;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_pf_10editdistpy_11levenshtein_distance(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_string_1, PyObject *__pyx_v_string_2, PyObject *__pyx_v_len_1, PyObject *__pyx_v_len_2, PyObject *__pyx_v_start); /* proto */
-static PyObject *__pyx_pf_10editdistpy_11levenshtein_2distance_max(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_string_1, PyObject *__pyx_v_string_2, PyObject *__pyx_v_len_1, PyObject *__pyx_v_len_2, PyObject *__pyx_v_start, PyObject *__pyx_v_max_distance); /* proto */
+static PyObject *__pyx_pf_10editdistpy_11damerau_osa_distance(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_string_1, PyObject *__pyx_v_string_2, PyObject *__pyx_v_len_1, PyObject *__pyx_v_len_2, PyObject *__pyx_v_start); /* proto */
+static PyObject *__pyx_pf_10editdistpy_11damerau_osa_2distance_max(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_string_1, PyObject *__pyx_v_string_2, PyObject *__pyx_v_len_1, PyObject *__pyx_v_len_2, PyObject *__pyx_v_start, PyObject *__pyx_v_max_distance); /* proto */
 /* Late includes */
 
-/* "editdistpy/levenshtein.pyx":25
+/* "editdistpy/damerau_osa.pyx":25
  *     )
  * 
  * cpdef int distance(             # <<<<<<<<<<<<<<
@@ -1158,8 +1158,8 @@ static PyObject *__pyx_pf_10editdistpy_11levenshtein_2distance_max(CYTHON_UNUSED
  *     object string_2,
  */
 
-static PyObject *__pyx_pw_10editdistpy_11levenshtein_1distance(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_1, PyObject *__pyx_v_string_2, PyObject *__pyx_v_len_1, PyObject *__pyx_v_len_2, PyObject *__pyx_v_start, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_pw_10editdistpy_11damerau_osa_1distance(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_f_10editdistpy_11damerau_osa_distance(PyObject *__pyx_v_string_1, PyObject *__pyx_v_string_2, PyObject *__pyx_v_len_1, PyObject *__pyx_v_len_2, PyObject *__pyx_v_start, CYTHON_UNUSED int __pyx_skip_dispatch) {
   char const *__pyx_v_c_string_1;
   char const *__pyx_v_c_string_2;
   int __pyx_v_dist;
@@ -1173,7 +1173,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("distance", 0);
 
-  /* "editdistpy/levenshtein.pyx":32
+  /* "editdistpy/damerau_osa.pyx":32
  *     object start
  * ) except +:
  *     cdef const char* c_string_1 = PyUnicode_AsUTF8(string_1)             # <<<<<<<<<<<<<<
@@ -1182,7 +1182,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
  */
   __pyx_v_c_string_1 = PyUnicode_AsUTF8(__pyx_v_string_1);
 
-  /* "editdistpy/levenshtein.pyx":33
+  /* "editdistpy/damerau_osa.pyx":33
  * ) except +:
  *     cdef const char* c_string_1 = PyUnicode_AsUTF8(string_1)
  *     cdef const char* c_string_2 = PyUnicode_AsUTF8(string_2)             # <<<<<<<<<<<<<<
@@ -1191,7 +1191,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
  */
   __pyx_v_c_string_2 = PyUnicode_AsUTF8(__pyx_v_string_2);
 
-  /* "editdistpy/levenshtein.pyx":34
+  /* "editdistpy/damerau_osa.pyx":34
  *     cdef const char* c_string_1 = PyUnicode_AsUTF8(string_1)
  *     cdef const char* c_string_2 = PyUnicode_AsUTF8(string_2)
  *     dist = _distance(c_string_1, c_string_2, len_1, len_2, start)             # <<<<<<<<<<<<<<
@@ -1203,7 +1203,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
   __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_start); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 34, __pyx_L1_error)
   __pyx_v_dist = _distance(__pyx_v_c_string_1, __pyx_v_c_string_2, __pyx_t_1, __pyx_t_2, __pyx_t_3);
 
-  /* "editdistpy/levenshtein.pyx":35
+  /* "editdistpy/damerau_osa.pyx":35
  *     cdef const char* c_string_2 = PyUnicode_AsUTF8(string_2)
  *     dist = _distance(c_string_1, c_string_2, len_1, len_2, start)
  *     return dist             # <<<<<<<<<<<<<<
@@ -1213,7 +1213,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
   __pyx_r = __pyx_v_dist;
   goto __pyx_L0;
 
-  /* "editdistpy/levenshtein.pyx":25
+  /* "editdistpy/damerau_osa.pyx":25
  *     )
  * 
  * cpdef int distance(             # <<<<<<<<<<<<<<
@@ -1223,7 +1223,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_AddTraceback("editdistpy.levenshtein.distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("editdistpy.damerau_osa.distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -1231,9 +1231,9 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10editdistpy_11levenshtein_1distance(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_10editdistpy_11levenshtein_distance[] = "distance(string_1, string_2, len_1, len_2, start) -> int";
-static PyObject *__pyx_pw_10editdistpy_11levenshtein_1distance(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_10editdistpy_11damerau_osa_1distance(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_10editdistpy_11damerau_osa_distance[] = "distance(string_1, string_2, len_1, len_2, start) -> int";
+static PyObject *__pyx_pw_10editdistpy_11damerau_osa_1distance(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_string_1 = 0;
   PyObject *__pyx_v_string_2 = 0;
   PyObject *__pyx_v_len_1 = 0;
@@ -1317,18 +1317,18 @@ static PyObject *__pyx_pw_10editdistpy_11levenshtein_1distance(PyObject *__pyx_s
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("distance", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 25, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("editdistpy.levenshtein.distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("editdistpy.damerau_osa.distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10editdistpy_11levenshtein_distance(__pyx_self, __pyx_v_string_1, __pyx_v_string_2, __pyx_v_len_1, __pyx_v_len_2, __pyx_v_start);
+  __pyx_r = __pyx_pf_10editdistpy_11damerau_osa_distance(__pyx_self, __pyx_v_string_1, __pyx_v_string_2, __pyx_v_len_1, __pyx_v_len_2, __pyx_v_start);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10editdistpy_11levenshtein_distance(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_string_1, PyObject *__pyx_v_string_2, PyObject *__pyx_v_len_1, PyObject *__pyx_v_len_2, PyObject *__pyx_v_start) {
+static PyObject *__pyx_pf_10editdistpy_11damerau_osa_distance(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_string_1, PyObject *__pyx_v_string_2, PyObject *__pyx_v_len_1, PyObject *__pyx_v_len_2, PyObject *__pyx_v_start) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -1339,7 +1339,7 @@ static PyObject *__pyx_pf_10editdistpy_11levenshtein_distance(CYTHON_UNUSED PyOb
   __Pyx_RefNannySetupContext("distance", 0);
   __Pyx_XDECREF(__pyx_r);
   try {
-    __pyx_t_1 = __pyx_f_10editdistpy_11levenshtein_distance(__pyx_v_string_1, __pyx_v_string_2, __pyx_v_len_1, __pyx_v_len_2, __pyx_v_start, 0);
+    __pyx_t_1 = __pyx_f_10editdistpy_11damerau_osa_distance(__pyx_v_string_1, __pyx_v_string_2, __pyx_v_len_1, __pyx_v_len_2, __pyx_v_start, 0);
   } catch(...) {
     __Pyx_CppExn2PyErr();
     __PYX_ERR(0, 25, __pyx_L1_error)
@@ -1353,7 +1353,7 @@ static PyObject *__pyx_pf_10editdistpy_11levenshtein_distance(CYTHON_UNUSED PyOb
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("editdistpy.levenshtein.distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("editdistpy.damerau_osa.distance", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1361,7 +1361,7 @@ static PyObject *__pyx_pf_10editdistpy_11levenshtein_distance(CYTHON_UNUSED PyOb
   return __pyx_r;
 }
 
-/* "editdistpy/levenshtein.pyx":37
+/* "editdistpy/damerau_osa.pyx":37
  *     return dist
  * 
  * cpdef int distance_max(             # <<<<<<<<<<<<<<
@@ -1369,8 +1369,8 @@ static PyObject *__pyx_pf_10editdistpy_11levenshtein_distance(CYTHON_UNUSED PyOb
  *     object string_2,
  */
 
-static PyObject *__pyx_pw_10editdistpy_11levenshtein_3distance_max(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_f_10editdistpy_11levenshtein_distance_max(PyObject *__pyx_v_string_1, PyObject *__pyx_v_string_2, PyObject *__pyx_v_len_1, PyObject *__pyx_v_len_2, PyObject *__pyx_v_start, PyObject *__pyx_v_max_distance, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_pw_10editdistpy_11damerau_osa_3distance_max(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_f_10editdistpy_11damerau_osa_distance_max(PyObject *__pyx_v_string_1, PyObject *__pyx_v_string_2, PyObject *__pyx_v_len_1, PyObject *__pyx_v_len_2, PyObject *__pyx_v_start, PyObject *__pyx_v_max_distance, CYTHON_UNUSED int __pyx_skip_dispatch) {
   char const *__pyx_v_c_string_1;
   char const *__pyx_v_c_string_2;
   int __pyx_v_dist;
@@ -1385,7 +1385,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance_max(PyObject *__pyx_v_str
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("distance_max", 0);
 
-  /* "editdistpy/levenshtein.pyx":45
+  /* "editdistpy/damerau_osa.pyx":45
  *     object max_distance
  * ) except +:
  *     cdef const char* c_string_1 = PyUnicode_AsUTF8(string_1)             # <<<<<<<<<<<<<<
@@ -1394,7 +1394,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance_max(PyObject *__pyx_v_str
  */
   __pyx_v_c_string_1 = PyUnicode_AsUTF8(__pyx_v_string_1);
 
-  /* "editdistpy/levenshtein.pyx":46
+  /* "editdistpy/damerau_osa.pyx":46
  * ) except +:
  *     cdef const char* c_string_1 = PyUnicode_AsUTF8(string_1)
  *     cdef const char* c_string_2 = PyUnicode_AsUTF8(string_2)             # <<<<<<<<<<<<<<
@@ -1403,7 +1403,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance_max(PyObject *__pyx_v_str
  */
   __pyx_v_c_string_2 = PyUnicode_AsUTF8(__pyx_v_string_2);
 
-  /* "editdistpy/levenshtein.pyx":47
+  /* "editdistpy/damerau_osa.pyx":47
  *     cdef const char* c_string_1 = PyUnicode_AsUTF8(string_1)
  *     cdef const char* c_string_2 = PyUnicode_AsUTF8(string_2)
  *     dist = _distance_max(c_string_1, c_string_2, len_1, len_2, start, max_distance)             # <<<<<<<<<<<<<<
@@ -1415,7 +1415,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance_max(PyObject *__pyx_v_str
   __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_max_distance); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 47, __pyx_L1_error)
   __pyx_v_dist = _distance_max(__pyx_v_c_string_1, __pyx_v_c_string_2, __pyx_t_1, __pyx_t_2, __pyx_t_3, __pyx_t_4);
 
-  /* "editdistpy/levenshtein.pyx":48
+  /* "editdistpy/damerau_osa.pyx":48
  *     cdef const char* c_string_2 = PyUnicode_AsUTF8(string_2)
  *     dist = _distance_max(c_string_1, c_string_2, len_1, len_2, start, max_distance)
  *     return dist             # <<<<<<<<<<<<<<
@@ -1423,7 +1423,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance_max(PyObject *__pyx_v_str
   __pyx_r = __pyx_v_dist;
   goto __pyx_L0;
 
-  /* "editdistpy/levenshtein.pyx":37
+  /* "editdistpy/damerau_osa.pyx":37
  *     return dist
  * 
  * cpdef int distance_max(             # <<<<<<<<<<<<<<
@@ -1433,7 +1433,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance_max(PyObject *__pyx_v_str
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_AddTraceback("editdistpy.levenshtein.distance_max", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("editdistpy.damerau_osa.distance_max", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -1441,9 +1441,9 @@ static int __pyx_f_10editdistpy_11levenshtein_distance_max(PyObject *__pyx_v_str
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10editdistpy_11levenshtein_3distance_max(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_10editdistpy_11levenshtein_2distance_max[] = "distance_max(string_1, string_2, len_1, len_2, start, max_distance) -> int";
-static PyObject *__pyx_pw_10editdistpy_11levenshtein_3distance_max(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_10editdistpy_11damerau_osa_3distance_max(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_10editdistpy_11damerau_osa_2distance_max[] = "distance_max(string_1, string_2, len_1, len_2, start, max_distance) -> int";
+static PyObject *__pyx_pw_10editdistpy_11damerau_osa_3distance_max(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_string_1 = 0;
   PyObject *__pyx_v_string_2 = 0;
   PyObject *__pyx_v_len_1 = 0;
@@ -1538,18 +1538,18 @@ static PyObject *__pyx_pw_10editdistpy_11levenshtein_3distance_max(PyObject *__p
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("distance_max", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 37, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("editdistpy.levenshtein.distance_max", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("editdistpy.damerau_osa.distance_max", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_10editdistpy_11levenshtein_2distance_max(__pyx_self, __pyx_v_string_1, __pyx_v_string_2, __pyx_v_len_1, __pyx_v_len_2, __pyx_v_start, __pyx_v_max_distance);
+  __pyx_r = __pyx_pf_10editdistpy_11damerau_osa_2distance_max(__pyx_self, __pyx_v_string_1, __pyx_v_string_2, __pyx_v_len_1, __pyx_v_len_2, __pyx_v_start, __pyx_v_max_distance);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10editdistpy_11levenshtein_2distance_max(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_string_1, PyObject *__pyx_v_string_2, PyObject *__pyx_v_len_1, PyObject *__pyx_v_len_2, PyObject *__pyx_v_start, PyObject *__pyx_v_max_distance) {
+static PyObject *__pyx_pf_10editdistpy_11damerau_osa_2distance_max(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_string_1, PyObject *__pyx_v_string_2, PyObject *__pyx_v_len_1, PyObject *__pyx_v_len_2, PyObject *__pyx_v_start, PyObject *__pyx_v_max_distance) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -1560,7 +1560,7 @@ static PyObject *__pyx_pf_10editdistpy_11levenshtein_2distance_max(CYTHON_UNUSED
   __Pyx_RefNannySetupContext("distance_max", 0);
   __Pyx_XDECREF(__pyx_r);
   try {
-    __pyx_t_1 = __pyx_f_10editdistpy_11levenshtein_distance_max(__pyx_v_string_1, __pyx_v_string_2, __pyx_v_len_1, __pyx_v_len_2, __pyx_v_start, __pyx_v_max_distance, 0);
+    __pyx_t_1 = __pyx_f_10editdistpy_11damerau_osa_distance_max(__pyx_v_string_1, __pyx_v_string_2, __pyx_v_len_1, __pyx_v_len_2, __pyx_v_start, __pyx_v_max_distance, 0);
   } catch(...) {
     __Pyx_CppExn2PyErr();
     __PYX_ERR(0, 37, __pyx_L1_error)
@@ -1574,7 +1574,7 @@ static PyObject *__pyx_pf_10editdistpy_11levenshtein_2distance_max(CYTHON_UNUSED
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("editdistpy.levenshtein.distance_max", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("editdistpy.damerau_osa.distance_max", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1583,25 +1583,25 @@ static PyObject *__pyx_pf_10editdistpy_11levenshtein_2distance_max(CYTHON_UNUSED
 }
 
 static PyMethodDef __pyx_methods[] = {
-  {"distance", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10editdistpy_11levenshtein_1distance, METH_VARARGS|METH_KEYWORDS, __pyx_doc_10editdistpy_11levenshtein_distance},
-  {"distance_max", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10editdistpy_11levenshtein_3distance_max, METH_VARARGS|METH_KEYWORDS, __pyx_doc_10editdistpy_11levenshtein_2distance_max},
+  {"distance", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10editdistpy_11damerau_osa_1distance, METH_VARARGS|METH_KEYWORDS, __pyx_doc_10editdistpy_11damerau_osa_distance},
+  {"distance_max", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_10editdistpy_11damerau_osa_3distance_max, METH_VARARGS|METH_KEYWORDS, __pyx_doc_10editdistpy_11damerau_osa_2distance_max},
   {0, 0, 0, 0}
 };
 
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_levenshtein(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_damerau_osa(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_levenshtein},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_damerau_osa},
   {0, NULL}
 };
 #endif
 
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    "levenshtein",
+    "damerau_osa",
     0, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
@@ -1743,11 +1743,11 @@ static int __Pyx_modinit_function_import_code(void) {
 
 
 #if PY_MAJOR_VERSION < 3
-__Pyx_PyMODINIT_FUNC initlevenshtein(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC initlevenshtein(void)
+__Pyx_PyMODINIT_FUNC initdamerau_osa(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC initdamerau_osa(void)
 #else
-__Pyx_PyMODINIT_FUNC PyInit_levenshtein(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_levenshtein(void)
+__Pyx_PyMODINIT_FUNC PyInit_damerau_osa(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit_damerau_osa(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -1814,7 +1814,7 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec_levenshtein(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec_damerau_osa(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
@@ -1826,7 +1826,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_levenshtein(PyObject *__pyx_pyinit
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module 'levenshtein' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module 'damerau_osa' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #elif PY_MAJOR_VERSION >= 3
@@ -1841,7 +1841,7 @@ if (!__Pyx_RefNanny) {
       Py_FatalError("failed to import 'refnanny' module");
 }
 #endif
-  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_levenshtein(void)", 0);
+  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_damerau_osa(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
@@ -1878,7 +1878,7 @@ if (!__Pyx_RefNanny) {
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("levenshtein", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("damerau_osa", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -1896,14 +1896,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_editdistpy__levenshtein) {
+  if (__pyx_module_is_main_editdistpy__damerau_osa) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "editdistpy.levenshtein")) {
-      if (unlikely(PyDict_SetItemString(modules, "editdistpy.levenshtein", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "editdistpy.damerau_osa")) {
+      if (unlikely(PyDict_SetItemString(modules, "editdistpy.damerau_osa", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -1924,9 +1924,9 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "editdistpy/levenshtein.pyx":1
+  /* "editdistpy/damerau_osa.pyx":1
  * # distutils: language = c++             # <<<<<<<<<<<<<<
- * # distutils: sources = editdistpy/_levenshtein.cpp
+ * # distutils: sources = editdistpy/_damerau_osa.cpp
  * 
  */
   __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -1941,11 +1941,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init editdistpy.levenshtein", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init editdistpy.damerau_osa", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init editdistpy.levenshtein");
+    PyErr_SetString(PyExc_ImportError, "init editdistpy.damerau_osa");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

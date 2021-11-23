@@ -1,20 +1,21 @@
 # distutils: language = c++
 # distutils: sources = editdistpy/_levenshtein.cpp
 
-from libcpp.string cimport string
+cdef extern from "Python.h":
+    const char* PyUnicode_AsUTF8(object unicode)
 
 cdef extern from "_levenshtein.hpp":
     int _distance(
-        const string string_1,
-        const string string_2,
+        const char* string_1,
+        const char* string_2,
         const int len_1,
         const int len_2,
         const int start,
     )
 
     int _distance_max(
-        const string string_1,
-        const string string_2,
+        const char* string_1,
+        const char* string_2,
         const int len_1,
         const int len_2,
         const int start,
@@ -22,26 +23,26 @@ cdef extern from "_levenshtein.hpp":
     )
 
 cpdef int distance(
-    str string_1,
-    str string_2,
-    int len_1,
-    int len_2,
-    int start
+    object string_1,
+    object string_2,
+    object len_1,
+    object len_2,
+    object start
 ) except +:
-    cdef string cpp_string_1 = string_1.encode("UTF-8")
-    cdef string cpp_string_2 = string_2.encode("UTF-8")
-    dist = _distance(cpp_string_1, cpp_string_2, len_1, len_2, start)
+    cdef const char* c_string_1 = PyUnicode_AsUTF8(string_1)
+    cdef const char* c_string_2 = PyUnicode_AsUTF8(string_2)
+    dist = _distance(c_string_1, c_string_2, len_1, len_2, start)
     return dist
 
 cpdef int distance_max(
-    str string_1,
-    str string_2,
-    int len_1,
-    int len_2,
-    int start,
-    int max_distance
+    object string_1,
+    object string_2,
+    object len_1,
+    object len_2,
+    object start,
+    object max_distance
 ) except +:
-    cdef string cpp_string_1 = string_1.encode("UTF-8")
-    cdef string cpp_string_2 = string_2.encode("UTF-8")
-    dist = _distance_max(cpp_string_1, cpp_string_2, len_1, len_2, start, max_distance)
+    cdef const char* c_string_1 = PyUnicode_AsUTF8(string_1)
+    cdef const char* c_string_2 = PyUnicode_AsUTF8(string_2)
+    dist = _distance_max(c_string_1, c_string_2, len_1, len_2, start, max_distance)
     return dist

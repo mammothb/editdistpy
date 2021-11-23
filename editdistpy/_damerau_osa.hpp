@@ -1,5 +1,5 @@
-#ifndef EDITDISTPY__LEVENSHTEIN_HPP_
-#define EDITDISTPY__LEVENSHTEIN_HPP_
+#ifndef EDITDISTPY__DAMERAU_OSA_HPP_
+#define EDITDISTPY__DAMERAU_OSA_HPP_
 
 #include "def.hpp"
 
@@ -26,4 +26,4 @@ int _distance_max(
 }
 #endif
 
-#endif  // EDITDISTPY__LEVENSHTEIN_HPP_
+#endif  // EDITDISTPY__DAMERAU_OSA_HPP_

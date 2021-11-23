@@ -47,7 +47,11 @@ ext_modules = [
         ["editdistpy/_levenshtein.cpp", "editdistpy/levenshtein.pyx"],
         include_dirs=["./editdistpy"],
     ),
-    Extension("editdistpy.damerau_osa", ["editdistpy/damerau_osa.pyx"]),
+    Extension(
+        "editdistpy.damerau_osa",
+        ["editdistpy/_damerau_osa.cpp", "editdistpy/damerau_osa.pyx"],
+        include_dirs=["./editdistpy"],
+    ),
 ]
 
 CYTHONIZE = bool(int(os.getenv("CYTHONIZE", "0"))) and cythonize is not None
