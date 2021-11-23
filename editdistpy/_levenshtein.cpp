@@ -1,6 +1,32 @@
 #include "_levenshtein.hpp"
 
-int _distance(
+#include "_helpers.hpp"
+
+int Distance(
+    const char* string_1
+  , const char* string_2
+  , const int64_t max_distance)
+{
+  int len_1;
+  int len_2;
+  int start;
+  PrefixSuffixPrep(string_1, string_2, len_1, len_2, start);
+  if (len_1 == 0) {
+    return len_2 <= max_distance ? len_2 : -1;
+  }
+  if (max_distance < len_2) {
+    return InternalDistanceMax(
+        string_1,
+        string_2,
+        len_1,
+        len_2,
+        start,
+        max_distance);
+  }
+  return InternalDistance(string_1, string_2, len_1, len_2, start);
+}
+
+int InternalDistance(
     const char* string_1
   , const char* string_2
   , const int len_1
@@ -35,22 +61,22 @@ int _distance(
   return current_cost;
 }
 
-int _distance_max(
+int InternalDistanceMax(
     const char* string_1
   , const char* string_2
   , const int len_1
   , const int len_2
   , const int start
-  , const int max_distance)
+  , const int64_t max_distance)
 {
   int char_1_costs[len_2];
   for (int i = 0; i < len_2; ++i) {
     char_1_costs[i] = i < max_distance ? i + 1 : max_distance + 1;
   }
   const int len_diff = len_2 - len_1;
-  const int j_start_offset = max_distance - len_diff;
+  const int64_t j_start_offset = max_distance - len_diff;
   int j_start = 0;
-  int j_end = max_distance;
+  int64_t j_end = max_distance;
   int current_cost = 0;
   for (int i = 0; i < len_1; ++i) {
     char char_1 = string_1[start + i];

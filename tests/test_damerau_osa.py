@@ -1,5 +1,5 @@
 import numpy as np
-from symspellpy.helpers import null_distance_results, prefix_suffix_prep
+from symspellpy.helpers import null_distance_results
 
 from editdistpy import damerau_osa
 
@@ -37,25 +37,14 @@ def actual_damerau_osa(string_1, string_2, max_distance):
     # if strings of different lengths, ensure shorter string is in string_1.
     # This can result in a little faster speed by spending more time spinning
     # just the inner loop during the main processing.
-    if len(string_1) > len(string_2):
+    len_1 = len(string_1)
+    len_2 = len(string_2)
+    if len_1 > len_2:
         string_2, string_1 = string_1, string_2
-    if len(string_2) - len(string_1) > max_distance:
+        len_2, len_1 = len_1, len_2
+    if len_2 - len_1 > max_distance:
         return -1
-    # identify common suffic and/or prefix that can be ignored
-    len_1, len_2, start = prefix_suffix_prep(string_1, string_2)
-    if len_1 == 0:
-        return len_2 if len_2 <= max_distance else -1
-
-    if max_distance < len_2:
-        return damerau_osa.distance_max(
-            string_1,
-            string_2,
-            len_1,
-            len_2,
-            start,
-            max_distance,
-        )
-    return damerau_osa.distance(string_1, string_2, len_1, len_2, start)
+    return damerau_osa.distance(string_1, string_2, max_distance)
 
 
 class TestDamerauOsa:

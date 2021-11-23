@@ -7,20 +7,25 @@
 extern "C" {
 #endif
 
-int _distance(
+int Distance(
+    const char* string_1
+  , const char* string_2
+  , const int64_t max_distance);
+
+int InternalDistance(
     const char* string_1
   , const char* string_2
   , const int len_1
   , const int len_2
   , const int start);
 
-int _distance_max(
+int InternalDistanceMax(
     const char* string_1
   , const char* string_2
   , const int len_1
   , const int len_2
   , const int start
-  , const int max_distance);
+  , const int64_t max_distance);
 
 #ifdef __cplusplus
 }

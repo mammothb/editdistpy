@@ -44,12 +44,20 @@ def no_cythonize(extensions, **_ignore):
 ext_modules = [
     Extension(
         "editdistpy.levenshtein",
-        ["editdistpy/_levenshtein.cpp", "editdistpy/levenshtein.pyx"],
+        [
+            "editdistpy/_levenshtein.cpp",
+            "editdistpy/_helpers.cpp",
+            "editdistpy/levenshtein.pyx",
+        ],
         include_dirs=["./editdistpy"],
     ),
     Extension(
         "editdistpy.damerau_osa",
-        ["editdistpy/_damerau_osa.cpp", "editdistpy/damerau_osa.pyx"],
+        [
+            "editdistpy/_damerau_osa.cpp",
+            "editdistpy/_helpers.cpp",
+            "editdistpy/damerau_osa.pyx",
+        ],
         include_dirs=["./editdistpy"],
     ),
 ]
