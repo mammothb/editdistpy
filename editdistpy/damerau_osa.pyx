@@ -1,5 +1,6 @@
 # distutils: language = c++
 # distutils: sources = editdistpy/_damerau_osa.cpp
+# cython: language_level=3
 
 cdef extern from "Python.h":
     const char* PyUnicode_AsUTF8(object unicode)

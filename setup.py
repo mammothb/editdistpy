@@ -15,6 +15,7 @@
 """Setup script."""
 
 import os
+from pathlib import Path
 
 from setuptools import Extension, setup
 
@@ -23,20 +24,36 @@ try:
 except ImportError:
     cythonize = None
 
+PROJ_DIR = Path(__file__).resolve().parent
+NAME = "editdistpy"
+VERSION = "0.0.0.dev1"
+DESCRIPTION = "Fast Levenshtein and Damerau optimal string alignment algorithms."
+with open(PROJ_DIR / "README.md", "r", encoding="utf-8") as infile:
+    LONG_DESCRIPTION = infile.read()
+LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
+AUTHOR = "mmb L"
+URL = "https://github.com/mammothb/editdistpy"
+LICENSE = "MIT"
+PROJECT_URLS = {
+    "Documentation": "https://github.com/mammothb/editdistpy",
+    "Changelog": "https://github.com/mammothb/editdistpy/blob/master/CHANGELOG.md",
+}
 
-# https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#distributing-cython-modules
+
 def no_cythonize(extensions, **_ignore):
+    """Use generated .cpp files insted of building
+    from: https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#distributing-cython-modules
+    """
     for extension in extensions:
         sources = []
-        for sfile in extension.sources:
-            path, ext = os.path.splitext(sfile)
-            if ext in (".pyx", ".py"):
+        for sfile in map(Path, extension.sources):
+            if sfile.suffix in (".pyx", ".py"):
                 if extension.language == "c++":
-                    ext = ".cpp"
+                    suffix = ".cpp"
                 else:
-                    ext = ".c"
-                sfile = path + ext
-            sources.append(sfile)
+                    suffix = ".c"
+                sfile.with_suffix(suffix)
+            sources.append(str(sfile))
         extension.sources[:] = sources
     return extensions
 
@@ -50,6 +67,7 @@ ext_modules = [
             "editdistpy/levenshtein.pyx",
         ],
         include_dirs=["./editdistpy"],
+        language="c++",
     ),
     Extension(
         "editdistpy.damerau_osa",
@@ -59,10 +77,13 @@ ext_modules = [
             "editdistpy/damerau_osa.pyx",
         ],
         include_dirs=["./editdistpy"],
+        language="c++",
     ),
 ]
 
-CYTHONIZE = bool(int(os.getenv("CYTHONIZE", "0"))) and cythonize is not None
+CYTHONIZE = (
+    bool(int(os.getenv("CYTHONIZE", "0"))) or bool(int(os.getenv("CIBUILDWHEEL", "0")))
+) and cythonize is not None
 
 if CYTHONIZE:
     compiler_directives = {"language_level": 3, "embedsignature": True}
@@ -71,5 +92,39 @@ else:
     ext_modules = no_cythonize(ext_modules)
 
 setup(
+    name=NAME,
+    version=VERSION,
+    description=DESCRIPTION,
+    long_description=LONG_DESCRIPTION,
+    long_description_content_type=LONG_DESCRIPTION_CONTENT_TYPE,
+    author=AUTHOR,
+    url=URL,
+    project_urls=PROJECT_URLS,
+    keywords=["edit distance", "levenshtein", "damerau"],
+    license=LICENSE,
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "License :: OSI Approved :: MIT License",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "Natural Language :: English",
+        "Operating System :: Microsoft :: Windows",
+        "Operating System :: POSIX",
+        "Operating System :: Unix",
+        "Operating System :: MacOS",
+        "Programming Language :: C++",
+        "Programming Language :: Cython",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: Implementation :: CPython",
+    ],
+    zip_safe=False,
+    python_requires=">=3.6",
+    include_package_data=True,
+    package_data={"editdistpy": ["*.hpp"]},
+    package_dir={"editdistpy": "editdistpy"},
     ext_modules=ext_modules,
 )
