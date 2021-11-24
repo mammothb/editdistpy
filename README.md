@@ -68,15 +68,15 @@ print(damerau_osa.distance(string_1, string_2, max_distance))
 A simple benchmark was done on Python 3.8.12 against [editdistance](https://github.com/roy-ht/editdistance) which implements the Levenshtein edit distance
 algorithm.
 
-The script used by the benchmark can be found [here](/tests/benchmarks.py).
+The script used by the benchmark can be found [here](https://github.com/mammothb/editdistpy/blob/master/tests/benchmarks.py).
 
 For clarity, the following string pairs were used.
 
 ### Short string
 
-"short sentence with several words"
+"short sentence with words"
 
-"shrtsen tence wit some mispeledwords"
+"shrtsen tence wit mispeledwords"
 
 ### Long string
 
@@ -86,17 +86,17 @@ For clarity, the following string pairs were used.
 
 ```
 short string
-        test_damerau_osa               1.1432659000001877
-        test_levenshtein               0.5929201000003559
-        test_editdistance              1.0418791000001875
-        test_damerau_osa_early_cutoff  0.5969067999999425
-        test_levenshtein_early_cutoff  0.39980750000040643
+        test_damerau_osa               0.925678600000083
+        test_levenshtein               0.6640075999998771
+        test_editdistance              0.9197039000000586
+        test_damerau_osa_early_cutoff  0.7028707999998005
+        test_levenshtein_early_cutoff  0.5697816000001694
 long string
-        test_damerau_osa               7.43553189999966
-        test_levenshtein               3.5767219999997906
-        test_editdistance              2.019506300000103
-        test_damerau_osa_early_cutoff  0.3622571999999309
-        test_levenshtein_early_cutoff  0.27194450000024517
+        test_damerau_osa               7.7526998000003005
+        test_levenshtein               4.262871200000063
+        test_editdistance              1.9676684999999452
+        test_damerau_osa_early_cutoff  0.9891195999998672
+        test_levenshtein_early_cutoff  0.9085431999997127
 ```
 
 While `max_distance=10` significantly improves the computation time, it may not
@@ -109,4 +109,4 @@ strings.
 ## Changelog
 ------------
 
-See the [changelog] for a history of notable changes to edistdistpy.
+See the [changelog](https://github.com/mammothb/editdistpy/blob/master/CHANGELOG.md) for a history of notable changes to edistdistpy.

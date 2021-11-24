@@ -4,9 +4,6 @@
 
 from libc.stdlib cimport malloc, free
 
-# cdef extern from "Python.h":
-#     const char* PyUnicode_AsUTF8(object unicode)
-
 cdef extern from "_damerau_osa.hpp":
     ctypedef int int64_t
     int Distance(
@@ -30,8 +27,6 @@ cpdef int distance(
         c_string_1[i] = ord(string_1[i])
     for i in range(len_2):
         c_string_2[i] = ord(string_2[i])
-    # cdef const char* c_string_1 = PyUnicode_AsUTF8(string_1)
-    # cdef const char* c_string_2 = PyUnicode_AsUTF8(string_2)
     dist = Distance(c_string_1, c_string_2, len_1, len_2, max_distance)
     free(c_string_1)
     free(c_string_2)
