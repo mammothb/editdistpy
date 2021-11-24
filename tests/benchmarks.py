@@ -5,8 +5,8 @@ import editdistance
 
 from editdistpy import damerau_osa, levenshtein
 
-a = "short sentence with several words"
-b = "shrtsen tence wit some mispeledwords"
+a = "short sentence with words"
+b = "shrtsen tence wit mispeledwords"
 c = "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod rem"
 d = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium"
 

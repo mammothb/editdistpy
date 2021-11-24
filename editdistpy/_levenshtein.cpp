@@ -3,12 +3,14 @@
 #include "_helpers.hpp"
 
 int Distance(
-    const char* string_1
-  , const char* string_2
+    const int* string_1
+  , const int* string_2
+  , const int string_len_1
+  , const int string_len_2
   , const int64_t max_distance)
 {
-  int len_1;
-  int len_2;
+  int len_1 = string_len_1;
+  int len_2 = string_len_2;
   int start;
   PrefixSuffixPrep(string_1, string_2, len_1, len_2, start);
   if (len_1 == 0) {
@@ -27,8 +29,8 @@ int Distance(
 }
 
 int InternalDistance(
-    const char* string_1
-  , const char* string_2
+    const int* string_1
+  , const int* string_2
   , const int len_1
   , const int len_2
   , const int start)
@@ -41,7 +43,7 @@ int InternalDistance(
   for (int i = 0; i < len_1; ++i) {
     int above_char_cost = i;
     int left_char_cost = i;
-    const char char_1 = string_1[start + i];
+    const int char_1 = string_1[start + i];
     for (int j = 0; j < len_2; ++j) {
       current_cost = left_char_cost;
       left_char_cost = char_1_costs[j];
@@ -63,8 +65,8 @@ int InternalDistance(
 }
 
 int InternalDistanceMax(
-    const char* string_1
-  , const char* string_2
+    const int* string_1
+  , const int* string_2
   , const int len_1
   , const int len_2
   , const int start
@@ -80,7 +82,7 @@ int InternalDistanceMax(
   int64_t j_end = max_distance;
   int current_cost = 0;
   for (int i = 0; i < len_1; ++i) {
-    char char_1 = string_1[start + i];
+    int char_1 = string_1[start + i];
     int above_char_cost = i;
     int prev_char_1_cost = i;
     if (i > j_start_offset) {

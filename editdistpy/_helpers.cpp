@@ -3,14 +3,12 @@
 #include <cstring>
 
 void PrefixSuffixPrep(
-    const char* string_1
-  , const char* string_2
+    const int* string_1
+  , const int* string_2
   , int& len_1
   , int& len_2
   , int& start)
 {
-  len_1 = strlen(string_1);
-  len_2 = strlen(string_2);
   while (len_1 != 0 && string_1[len_1 - 1] == string_2[len_2 - 1]) {
     --len_1;
     --len_2;
