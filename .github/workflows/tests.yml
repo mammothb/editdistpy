@@ -48,7 +48,7 @@ jobs:
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
           CIBW_BUILD_VERBOSITY: 3
           CIBW_BEFORE_TEST: pip install -r {project}/requirements-dev.txt
-          CIBW_TEST_COMMAND: pytest -sv
+          CIBW_TEST_COMMAND: pytest -sv {project}/tests
 
       - uses: actions/upload-artifact@v2
         with:
