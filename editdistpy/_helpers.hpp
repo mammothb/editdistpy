@@ -8,8 +8,8 @@ extern "C" {
 #endif
 
 void PrefixSuffixPrep(
-    const char* string_1
-  , const char* string_2
+    const int* string_1
+  , const int* string_2
   , int& len_1
   , int& len_2
   , int& start);

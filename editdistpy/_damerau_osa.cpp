@@ -2,13 +2,17 @@
 
 #include "_helpers.hpp"
 
+const int kSpace = 32;
+
 int Distance(
-    const char* string_1
-  , const char* string_2
+    const int* string_1
+  , const int* string_2
+  , const int string_len_1
+  , const int string_len_2
   , const int64_t max_distance)
 {
-  int len_1;
-  int len_2;
+  int len_1 = string_len_1;
+  int len_2 = string_len_2;
   int start;
   PrefixSuffixPrep(string_1, string_2, len_1, len_2, start);
   if (len_1 == 0) {
@@ -27,8 +31,8 @@ int Distance(
 }
 
 int InternalDistance(
-    const char* string_1
-  , const char* string_2
+    const int* string_1
+  , const int* string_2
   , const int len_1
   , const int len_2
   , const int start)
@@ -39,12 +43,12 @@ int InternalDistance(
     prev_char_1_costs[i] = 0;
     char_1_costs[i] = i + 1;
   }
-  char char_1 = ' ';
+  int char_1 = kSpace;
   int current_cost = 0;
   for (int i = 0; i < len_1; ++i) {
-    const char prev_char_1 = char_1;
+    const int prev_char_1 = char_1;
     char_1 = string_1[start + i];
-    char char_2 = ' ';
+    int char_2 = kSpace;
     int above_char_cost = i;
     int left_char_cost = i;
     int next_trans_cost = 0;
@@ -57,7 +61,7 @@ int InternalDistance(
       // left now equals current cost (which will be diagonal at next
       // iteration)
       left_char_cost = char_1_costs[j];
-      const char prev_char_2 = char_2;
+      const int prev_char_2 = char_2;
       char_2 = string_2[start + j];
       if (char_1 != char_2) {
         // substitution if neither of two conditions below
@@ -87,8 +91,8 @@ int InternalDistance(
 }
 
 int InternalDistanceMax(
-    const char* string_1
-  , const char* string_2
+    const int* string_1
+  , const int* string_2
   , const int len_1
   , const int len_2
   , const int start
@@ -104,12 +108,12 @@ int InternalDistanceMax(
   const int64_t j_start_offset = max_distance - len_diff;
   int j_start = 0;
   int64_t j_end = max_distance;
-  char char_1 = ' ';
+  int char_1 = kSpace;
   int current_cost = 0;
   for (int i = 0; i < len_1; ++i) {
-    const char prev_char_1 = char_1;
+    const int prev_char_1 = char_1;
     char_1 = string_1[start + i];
-    char char_2 = ' ';
+    int char_2 = kSpace;
     int above_char_cost = i;
     int left_char_cost = i;
     int next_trans_cost = 0;
@@ -131,7 +135,7 @@ int InternalDistanceMax(
       // left not equals current cost (which will be diagonal at next
       // iteration)
       left_char_cost = char_1_costs[j];
-      const char prev_char_2 = char_2;
+      const int prev_char_2 = char_2;
       char_2 = string_2[start + j];
       if (char_1 != char_2) {
         // substitution if neither of two conditions below
