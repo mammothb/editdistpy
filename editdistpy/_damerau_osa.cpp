@@ -33,9 +33,10 @@ int InternalDistance(
   , const int len_2
   , const int start)
 {
-  int prev_char_1_costs[len_2] = {};
-  int char_1_costs[len_2];
+  int* prev_char_1_costs = new int[len_2];
+  int* char_1_costs = new int[len_2];
   for (int i = 0; i < len_2; ++i) {
+    prev_char_1_costs[i] = 0;
     char_1_costs[i] = i + 1;
   }
   char char_1 = ' ';
@@ -80,6 +81,8 @@ int InternalDistance(
       char_1_costs[j] = current_cost;
     }
   }
+  delete[] prev_char_1_costs;
+  delete[] char_1_costs;
   return current_cost;
 }
 
@@ -91,10 +94,11 @@ int InternalDistanceMax(
   , const int start
   , const int64_t max_distance)
 {
-  int prev_char_1_costs[len_2] = {};
-  int char_1_costs[len_2];
+  int* prev_char_1_costs = new int[len_2];
+  int* char_1_costs = new int[len_2];
   for (int i = 0; i < len_2; ++i) {
-    char_1_costs[i] = i < max_distance ? i + 1 : max_distance + 1;
+    prev_char_1_costs[i] = 0;
+    char_1_costs[i] = i + 1;
   }
   const int len_diff = len_2 - len_1;
   const int64_t j_start_offset = max_distance - len_diff;
@@ -151,8 +155,12 @@ int InternalDistanceMax(
       char_1_costs[j] = current_cost;
     }
     if (char_1_costs[i + len_diff] > max_distance) {
+      delete[] prev_char_1_costs;
+      delete[] char_1_costs;
       return -1;
     }
   }
+  delete[] prev_char_1_costs;
+  delete[] char_1_costs;
   return current_cost <= max_distance ? current_cost : -1;
 }
