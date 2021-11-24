@@ -49,7 +49,6 @@ jobs:
           CIBW_BUILD_VERBOSITY: 3
           CIBW_BEFORE_TEST: pip install -r {project}/requirements-dev.txt
           CIBW_TEST_COMMAND: pytest -sv
-          CYTHONIZE: 1
 
       - uses: actions/upload-artifact@v2
         with:
