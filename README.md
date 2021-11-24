@@ -1,4 +1,5 @@
 editdistpy <br>
+[![PyPI version](https://badge.fury.io/py/editdistpy.svg)](https://badge.fury.io/py/editdistpy)
 [![Tests](https://github.com/mammothb/editdistpy/actions/workflows/tests.yml/badge.svg)](https://github.com/mammothb/editdistpy/actions/workflows/tests.yml)
 ========
 
