@@ -16,7 +16,6 @@
 
 import os
 from pathlib import Path
-from types import SimpleNamespace
 
 from setuptools import Extension, setup
 
@@ -41,19 +40,20 @@ PROJECT_URLS = {
 }
 
 
-# https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#distributing-cython-modules
 def no_cythonize(extensions, **_ignore):
+    """Use generated .cpp files insted of building
+    from: https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#distributing-cython-modules
+    """
     for extension in extensions:
         sources = []
-        for sfile in extension.sources:
-            path, ext = os.path.splitext(sfile)
-            if ext in (".pyx", ".py"):
+        for sfile in map(Path, extension.sources):
+            if sfile.suffix in (".pyx", ".py"):
                 if extension.language == "c++":
-                    ext = ".cpp"
+                    suffix = ".cpp"
                 else:
-                    ext = ".c"
-                sfile = path + ext
-            sources.append(sfile)
+                    suffix = ".c"
+                sfile.with_suffix(suffix)
+            sources.append(str(sfile))
         extension.sources[:] = sources
     return extensions
 
