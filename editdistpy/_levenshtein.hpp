@@ -8,26 +8,26 @@ extern "C" {
 #endif
 
 int Distance(
-    const int* string_1
-  , const int* string_2
-  , const int string_len_1
-  , const int string_len_2
-  , const int64_t max_distance);
+    const int* pString1
+  , const int* pString2
+  , int stringLen1
+  , int stringLen2
+  , const int64_t maxDistance);
 
 int InternalDistance(
-    const int* string_1
-  , const int* string_2
-  , const int len_1
-  , const int len_2
+    const int* pString1
+  , const int* pString2
+  , const int len1
+  , const int len2
   , const int start);
 
 int InternalDistanceMax(
-    const int* string_1
-  , const int* string_2
-  , const int len_1
-  , const int len_2
+    const int* pString1
+  , const int* pString2
+  , const int len1
+  , const int len2
   , const int start
-  , const int64_t max_distance);
+  , const int64_t maxDistance);
 
 #ifdef __cplusplus
 }

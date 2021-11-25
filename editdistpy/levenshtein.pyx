@@ -7,11 +7,11 @@ from libc.stdlib cimport malloc, free
 cdef extern from "_levenshtein.hpp":
     ctypedef int int64_t
     int Distance(
-        const int* string_1,
-        const int* string_2,
-        const int string_len_1,
-        const int string_len_2,
-        const int64_t max_distance,
+        const int* pString1,
+        const int* pString2,
+        int stringLen1,
+        int stringLen2,
+        const int64_t maxDistance
     )
 
 cpdef int distance(

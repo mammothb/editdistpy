@@ -51,7 +51,20 @@ def test_editdistance_long():
     editdistance.eval(c, d)
 
 
+def show_results(name, result, count):
+    print(name, end=" ")
+
+    per_pass = 1000000 * (result / count)
+    print(f"{per_pass:.4f} usec/pass", end=" ")
+
+    result *= 1000
+    print(f"{result:.2f} msec total", end=" ")
+
+    print(f"{count} iterations")
+
+
 if __name__ == "__main__":
+    number = 1000000
     for suffix in ("_short", "_long"):
         print(f"{suffix[1:]} string")
         for function in (
@@ -61,10 +74,12 @@ if __name__ == "__main__":
             "test_damerau_osa_early_cutoff",
             "test_levenshtein_early_cutoff",
         ):
-            print(
+            show_results(
                 f"\t{function:<30}",
                 timeit.timeit(
                     f"{function}{suffix}()",
                     setup=f"from __main__ import {function}{suffix}",
+                    number=number,
                 ),
+                number,
             )
