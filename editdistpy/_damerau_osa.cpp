@@ -1,5 +1,6 @@
 #include "_damerau_osa.hpp"
 
+#include <algorithm>
 #include <cstdlib>
 
 #include "_helpers.hpp"
@@ -13,19 +14,28 @@ int Distance(
   , int stringLen2
   , const int64_t maxDistance)
 {
+  if (pString1 == NULL || pString2 == NULL) {
+    return NullDistanceResults(pString1, pString2, stringLen1, stringLen2,
+        maxDistance);
+  }
+  if (maxDistance <= 0) {
+    return ZeroDistanceResults(pString1, pString2, stringLen1, stringLen2);
+  }
+  if (stringLen1 > stringLen2) {
+    std::swap(pString1, pString2);
+    std::swap(stringLen1, stringLen2);
+  }
+  if (stringLen2 - stringLen1 > maxDistance) {
+    return -1;
+  }
   int start = 0;
   PrefixSuffixPrep(pString1, pString2, stringLen1, stringLen2, start);
   if (stringLen1 == 0) {
     return stringLen2 <= maxDistance ? stringLen2 : -1;
   }
   if (maxDistance < stringLen2) {
-    return InternalDistanceMax(
-        pString1,
-        pString2,
-        stringLen1,
-        stringLen2,
-        start,
-        maxDistance);
+    return InternalDistanceMax(pString1, pString2, stringLen1, stringLen2,
+        start, maxDistance);
   }
   return InternalDistance(pString1, pString2, stringLen1, stringLen2, start);
 }
