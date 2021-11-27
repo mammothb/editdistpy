@@ -26,7 +26,7 @@ except ImportError:
 
 PROJ_DIR = Path(__file__).resolve().parent
 NAME = "editdistpy"
-VERSION = "0.1.2rc1"
+VERSION = "0.1.2rc2"
 DESCRIPTION = "Fast Levenshtein and Damerau optimal string alignment algorithms."
 with open(PROJ_DIR / "README.md", "r", encoding="utf-8") as infile:
     LONG_DESCRIPTION = infile.read()
@@ -52,7 +52,7 @@ def no_cythonize(extensions, **_ignore):
                     suffix = ".cpp"
                 else:
                     suffix = ".c"
-                sfile.with_suffix(suffix)
+                sfile = sfile.with_suffix(suffix)
             sources.append(str(sfile))
         extension.sources[:] = sources
     return extensions
@@ -81,15 +81,13 @@ ext_modules = [
     ),
 ]
 
-CYTHONIZE = (
-    bool(int(os.getenv("CYTHONIZE", "0"))) or bool(int(os.getenv("CIBUILDWHEEL", "0")))
-) and cythonize is not None
+NO_CYTHONIZE = "NO_CYTHONIZE" in os.environ or cythonize is None
 
-if CYTHONIZE:
+if NO_CYTHONIZE:
+    ext_modules = no_cythonize(ext_modules)
+else:
     compiler_directives = {"language_level": 3, "embedsignature": True}
     ext_modules = cythonize(ext_modules, compiler_directives=compiler_directives)
-else:
-    ext_modules = no_cythonize(ext_modules)
 
 setup(
     name=NAME,
