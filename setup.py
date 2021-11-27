@@ -15,6 +15,7 @@
 """Setup script."""
 
 import os
+import sys
 from pathlib import Path
 
 from setuptools import Extension, setup
@@ -26,7 +27,7 @@ except ImportError:
 
 PROJ_DIR = Path(__file__).resolve().parent
 NAME = "editdistpy"
-VERSION = "0.1.2"
+VERSION = "0.1.3rc1"
 DESCRIPTION = "Fast Levenshtein and Damerau optimal string alignment algorithms."
 with open(PROJ_DIR / "README.md", "r", encoding="utf-8") as infile:
     LONG_DESCRIPTION = infile.read()
@@ -58,6 +59,10 @@ def no_cythonize(extensions, **_ignore):
     return extensions
 
 
+extra_compiler_args = []
+if sys.platform == "darwin":
+    extra_compiler_args = ["stdlib=libc++"]
+
 ext_modules = [
     Extension(
         "editdistpy.levenshtein",
@@ -68,6 +73,7 @@ ext_modules = [
         ],
         include_dirs=["./editdistpy"],
         language="c++",
+        extra_compiler_args=extra_compiler_args,
     ),
     Extension(
         "editdistpy.damerau_osa",
@@ -78,6 +84,7 @@ ext_modules = [
         ],
         include_dirs=["./editdistpy"],
         language="c++",
+        extra_compiler_args=extra_compiler_args,
     ),
 ]
 
