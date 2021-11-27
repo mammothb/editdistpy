@@ -26,7 +26,7 @@ except ImportError:
 
 PROJ_DIR = Path(__file__).resolve().parent
 NAME = "editdistpy"
-VERSION = "0.1.1"
+VERSION = "0.1.2rc1"
 DESCRIPTION = "Fast Levenshtein and Damerau optimal string alignment algorithms."
 with open(PROJ_DIR / "README.md", "r", encoding="utf-8") as infile:
     LONG_DESCRIPTION = infile.read()
@@ -124,7 +124,6 @@ setup(
     zip_safe=False,
     python_requires=">=3.6",
     include_package_data=True,
-    package_data={"editdistpy": ["*.hpp"]},
     package_dir={"editdistpy": "editdistpy"},
     ext_modules=ext_modules,
 )
