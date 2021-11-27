@@ -1,1 +1,1 @@
-recursive-include editdistpy *.hpp *.cpp
+recursive-include editdistpy *.hpp *.cpp *.pyx
