@@ -59,9 +59,9 @@ def no_cythonize(extensions, **_ignore):
     return extensions
 
 
-extra_compiler_args = []
+extra_compile_args = []
 if sys.platform == "darwin":
-    extra_compiler_args = ["stdlib=libc++"]
+    extra_compile_args = ["stdlib=libc++"]
 
 ext_modules = [
     Extension(
@@ -73,7 +73,7 @@ ext_modules = [
         ],
         include_dirs=["./editdistpy"],
         language="c++",
-        extra_compiler_args=extra_compiler_args,
+        extra_compile_args=extra_compile_args,
     ),
     Extension(
         "editdistpy.damerau_osa",
@@ -84,7 +84,7 @@ ext_modules = [
         ],
         include_dirs=["./editdistpy"],
         language="c++",
-        extra_compiler_args=extra_compiler_args,
+        extra_compile_args=extra_compile_args,
     ),
 ]
 
