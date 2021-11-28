@@ -61,7 +61,7 @@ def no_cythonize(extensions, **_ignore):
 
 extra_compile_args = []
 if sys.platform == "darwin":
-    extra_compile_args = ["stdlib=libc++"]
+    extra_compile_args = ["-stdlib=libc++"]
 
 ext_modules = [
     Extension(
