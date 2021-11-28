@@ -64,7 +64,7 @@ def show_results(name, result, count):
 
 
 if __name__ == "__main__":
-    number = 1000000
+    number = 2000000
     for suffix in ("_short", "_long"):
         print(f"{suffix[1:]} string")
         for function in (

@@ -19,12 +19,13 @@ int Distance(
   if (maxDistance <= 0) {
     return ZeroDistanceResults(pString1, pString2, stringLen1, stringLen2);
   }
+  if (stringLen2 - stringLen1 > maxDistance ||
+      stringLen2 - stringLen1 < -maxDistance) {
+    return -1;
+  }
   if (stringLen1 > stringLen2) {
     std::swap(pString1, pString2);
     std::swap(stringLen1, stringLen2);
-  }
-  if (stringLen2 - stringLen1 > maxDistance) {
-    return -1;
   }
   int start = 0;
   PrefixSuffixPrep(pString1, pString2, stringLen1, stringLen2, start);
