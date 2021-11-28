@@ -15,9 +15,12 @@
 """Setup script."""
 
 import os
+import platform
 import sys
 from pathlib import Path
+from sysconfig import get_config_vars
 
+from pkg_resources import parse_version
 from setuptools import Extension, setup
 
 try:
@@ -27,7 +30,7 @@ except ImportError:
 
 PROJ_DIR = Path(__file__).resolve().parent
 NAME = "editdistpy"
-VERSION = "0.1.3rc2"
+VERSION = "0.1.3rc3"
 DESCRIPTION = "Fast Levenshtein and Damerau optimal string alignment algorithms."
 with open(PROJ_DIR / "README.md", "r", encoding="utf-8") as infile:
     LONG_DESCRIPTION = infile.read()
@@ -60,8 +63,25 @@ def no_cythonize(extensions, **_ignore):
 
 
 extra_compile_args = []
+extra_link_args = []
+# Adapted from https://github.com/pandas-dev/pandas/blob/1423ef0f917220682382d478761bf31315a197ef/setup.py#L348
 if sys.platform == "darwin":
-    extra_compile_args = ["-stdlib=libc++"]
+    if "MACOSX_DEPLOYMENT_TARGET" not in os.environ:
+        current_system = platform.mac_ver()[0]
+        python_target = get_config_vars().get(
+            "MACOSX_DEPLOYMENT_TARGET", current_system
+        )
+        target_macos_version = "10.9"
+        parsed_macos_version = parse_version(target_macos_version)
+        if (
+            parse_version(str(python_target))
+            < parsed_macos_version
+            <= parse_version(current_system)
+        ):
+            os.environ["MACOSX_DEPLOYMENT_TARGET"] = target_macos_version
+
+    extra_compile_args = ["-std=c++11"]
+    extra_link_args = ["-stdlib=libc++"]
 
 ext_modules = [
     Extension(
@@ -74,6 +94,7 @@ ext_modules = [
         include_dirs=["./editdistpy"],
         language="c++",
         extra_compile_args=extra_compile_args,
+        extra_link_args=extra_link_args,
     ),
     Extension(
         "editdistpy.damerau_osa",
@@ -85,6 +106,7 @@ ext_modules = [
         include_dirs=["./editdistpy"],
         language="c++",
         extra_compile_args=extra_compile_args,
+        extra_link_args=extra_link_args,
     ),
 ]
 
