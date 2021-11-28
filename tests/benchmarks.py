@@ -5,50 +5,26 @@ import editdistance
 
 from editdistpy import damerau_osa, levenshtein
 
-a = "short sentence with words"
-b = "shrtsen tence wit mispeledwords"
-c = "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod rem"
-d = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium"
+single_dif = ("xabxcdxxefxgx", "1ab2cd34ef5g6")
+single_sim = ("example", "samples")
+single_end = ("kdeisfnexabxcdxlskdixefxgx", "xabxcdxlskdixefxgx")
+short = ("short sentence with words", "shrtsen tence wit mispeledwords")
+long = (
+    "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod rem",
+    "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium",
+)
 
 
-def test_damerau_osa_short():
-    damerau_osa.distance(a, b, sys.maxsize)
+def test_damerau_osa(s1, s2, max_distance):
+    damerau_osa.distance(s1, s2, max_distance)
 
 
-def test_damerau_osa_early_cutoff_short():
-    damerau_osa.distance(a, b, 10)
+def test_levenshtein(s1, s2, max_distance):
+    levenshtein.distance(s1, s2, max_distance)
 
 
-def test_levenshtein_short():
-    levenshtein.distance(a, b, sys.maxsize)
-
-
-def test_levenshtein_early_cutoff_short():
-    levenshtein.distance(a, b, 10)
-
-
-def test_editdistance_short():
-    editdistance.eval(a, b)
-
-
-def test_damerau_osa_long():
-    damerau_osa.distance(c, d, sys.maxsize)
-
-
-def test_damerau_osa_early_cutoff_long():
-    damerau_osa.distance(c, d, 10)
-
-
-def test_levenshtein_long():
-    levenshtein.distance(c, d, sys.maxsize)
-
-
-def test_levenshtein_early_cutoff_long():
-    levenshtein.distance(c, d, 10)
-
-
-def test_editdistance_long():
-    editdistance.eval(c, d)
+def test_editdistance(s1, s2, _):
+    editdistance.eval(s1, s2)
 
 
 def show_results(name, result, count):
@@ -65,20 +41,25 @@ def show_results(name, result, count):
 
 if __name__ == "__main__":
     number = 2000000
-    for suffix in ("_short", "_long"):
-        print(f"{suffix[1:]} string")
+    for suffix in ("single_dif", "single_sim", "single_end", "short", "long"):
+        print(f"{suffix} string")
         for function in (
-            "test_damerau_osa",
-            "test_levenshtein",
-            "test_editdistance",
-            "test_damerau_osa_early_cutoff",
-            "test_levenshtein_early_cutoff",
+            "test_damerau_osa ",
+            "test_levenshtein ",
+            "test_editdistance ",
+            "test_damerau_osa early_cutoff",
+            "test_levenshtein early_cutoff",
         ):
+            if "early_cutoff" in function:
+                max_distance = 10
+            else:
+                max_distance = sys.maxsize
+            callable = function[: function.index(" ")]
             show_results(
                 f"\t{function:<30}",
                 timeit.timeit(
-                    f"{function}{suffix}()",
-                    setup=f"from __main__ import {function}{suffix}",
+                    f"{callable}({suffix}[0], {suffix}[1], {max_distance})",
+                    setup=f"from __main__ import {callable}, {suffix}",
                     number=number,
                 ),
                 number,

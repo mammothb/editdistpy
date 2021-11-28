@@ -19,16 +19,32 @@ int Distance(
   if (maxDistance <= 0) {
     return ZeroDistanceResults(pString1, pString2, stringLen1, stringLen2);
   }
-  if (stringLen2 - stringLen1 > maxDistance ||
-      stringLen2 - stringLen1 < -maxDistance) {
+  if (stringLen2 - stringLen1 > maxDistance
+      || stringLen2 - stringLen1 < -maxDistance) {
     return -1;
   }
   if (stringLen1 > stringLen2) {
     std::swap(pString1, pString2);
     std::swap(stringLen1, stringLen2);
   }
+  // Trim suffix
+  while (stringLen1 != 0
+      && pString1[~-stringLen1] == pString2[~-stringLen2]) {
+    --stringLen1;
+    --stringLen2;
+  }
+  if (stringLen1 == 0) {
+    return stringLen2 <= maxDistance ? stringLen2 : -1;
+  }
+  // Trim prefix
   int start = 0;
-  PrefixSuffixPrep(pString1, pString2, stringLen1, stringLen2, start);
+  while (start != stringLen1 && pString1[start] == pString2[start]) {
+    ++start;
+  }
+  if (start != 0) {
+    stringLen1 -= start;
+    stringLen2 -= start;
+  }
   if (stringLen1 == 0) {
     return stringLen2 <= maxDistance ? stringLen2 : -1;
   }
