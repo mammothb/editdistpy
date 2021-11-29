@@ -1224,7 +1224,7 @@ static int __pyx_f_10editdistpy_11damerau_osa_distance(PyObject *__pyx_v_string_
   __Pyx_RefNannySetupContext("distance", 0);
 
   /* "editdistpy/damerau_osa.pyx":22
- *     object max_distance
+ *     object max_distance,
  * ) except +:
  *     cdef int len_1 = 0             # <<<<<<<<<<<<<<
  *     cdef int* c_string_1 = NULL

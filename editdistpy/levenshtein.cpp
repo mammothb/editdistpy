@@ -1224,18 +1224,13 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
   __Pyx_RefNannySetupContext("distance", 0);
 
   /* "editdistpy/levenshtein.pyx":22
- *     object max_distance
+ *     object max_distance,
  * ) except +:
  *     cdef int len_1 = 0             # <<<<<<<<<<<<<<
  *     cdef int* c_string_1 = NULL
  *     cdef int len_2 = 0
  */
-<<<<<<< HEAD
   __pyx_v_len_1 = 0;
-=======
-  __pyx_t_1 = PyObject_Length(__pyx_v_string_1); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 22, __pyx_L1_error)
-  __pyx_v_len_1 = __pyx_t_1;
->>>>>>> master
 
   /* "editdistpy/levenshtein.pyx":23
  * ) except +:
@@ -1262,7 +1257,6 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
  * 
  *     if string_1 is not None:
  */
-<<<<<<< HEAD
   __pyx_v_c_string_2 = NULL;
 
   /* "editdistpy/levenshtein.pyx":27
@@ -1292,39 +1286,9 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
  *         c_string_1 = <int*>malloc(len_1 * sizeof(int))             # <<<<<<<<<<<<<<
  *         for i in range(len_1):
  *             c_string_1[i] = ord(string_1[i])
-=======
-  __pyx_t_1 = PyObject_Length(__pyx_v_string_2); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 23, __pyx_L1_error)
-  __pyx_v_len_2 = __pyx_t_1;
-
-  /* "editdistpy/levenshtein.pyx":24
- *     cdef int len_1 = len(string_1)
- *     cdef int len_2 = len(string_2)
- *     cdef int* c_string_1 = <int*>malloc(len_1 * sizeof(int))             # <<<<<<<<<<<<<<
- *     cdef int* c_string_2 = <int*>malloc(len_2 * sizeof(int))
- *     for i in range(len_1):
- */
-  __pyx_v_c_string_1 = ((int *)malloc((__pyx_v_len_1 * (sizeof(int)))));
-
-  /* "editdistpy/levenshtein.pyx":25
- *     cdef int len_2 = len(string_2)
- *     cdef int* c_string_1 = <int*>malloc(len_1 * sizeof(int))
- *     cdef int* c_string_2 = <int*>malloc(len_2 * sizeof(int))             # <<<<<<<<<<<<<<
- *     for i in range(len_1):
- *         c_string_1[i] = ord(string_1[i])
- */
-  __pyx_v_c_string_2 = ((int *)malloc((__pyx_v_len_2 * (sizeof(int)))));
-
-  /* "editdistpy/levenshtein.pyx":26
- *     cdef int* c_string_1 = <int*>malloc(len_1 * sizeof(int))
- *     cdef int* c_string_2 = <int*>malloc(len_2 * sizeof(int))
- *     for i in range(len_1):             # <<<<<<<<<<<<<<
- *         c_string_1[i] = ord(string_1[i])
- *     for i in range(len_2):
->>>>>>> master
  */
     __pyx_v_c_string_1 = ((int *)malloc((__pyx_v_len_1 * (sizeof(int)))));
 
-<<<<<<< HEAD
     /* "editdistpy/levenshtein.pyx":30
  *         len_1 = len(string_1)
  *         c_string_1 = <int*>malloc(len_1 * sizeof(int))
@@ -1396,28 +1360,6 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
  *         for i in range(len_2):             # <<<<<<<<<<<<<<
  *             c_string_2[i] = ord(string_2[i])
  * 
-=======
-    /* "editdistpy/levenshtein.pyx":27
- *     cdef int* c_string_2 = <int*>malloc(len_2 * sizeof(int))
- *     for i in range(len_1):
- *         c_string_1[i] = ord(string_1[i])             # <<<<<<<<<<<<<<
- *     for i in range(len_2):
- *         c_string_2[i] = ord(string_2[i])
- */
-    __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_string_1, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 27, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = __Pyx_PyObject_Ord(__pyx_t_5); if (unlikely(__pyx_t_6 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 27, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    (__pyx_v_c_string_1[__pyx_v_i]) = __pyx_t_6;
-  }
-
-  /* "editdistpy/levenshtein.pyx":28
- *     for i in range(len_1):
- *         c_string_1[i] = ord(string_1[i])
- *     for i in range(len_2):             # <<<<<<<<<<<<<<
- *         c_string_2[i] = ord(string_2[i])
- *     dist = Distance(c_string_1, c_string_2, len_1, len_2, max_distance)
->>>>>>> master
  */
     __pyx_t_4 = __pyx_v_len_2;
     __pyx_t_5 = __pyx_t_4;
@@ -1438,7 +1380,6 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
       (__pyx_v_c_string_2[__pyx_v_i]) = __pyx_t_8;
     }
 
-<<<<<<< HEAD
     /* "editdistpy/levenshtein.pyx":32
  *         for i in range(len_1):
  *             c_string_1[i] = ord(string_1[i])
@@ -1451,42 +1392,15 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
   /* "editdistpy/levenshtein.pyx":38
  *             c_string_2[i] = ord(string_2[i])
  * 
-=======
-    /* "editdistpy/levenshtein.pyx":29
- *         c_string_1[i] = ord(string_1[i])
- *     for i in range(len_2):
- *         c_string_2[i] = ord(string_2[i])             # <<<<<<<<<<<<<<
- *     dist = Distance(c_string_1, c_string_2, len_1, len_2, max_distance)
- *     free(c_string_1)
- */
-    __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_string_2, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 29, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = __Pyx_PyObject_Ord(__pyx_t_5); if (unlikely(__pyx_t_6 == ((long)(long)(Py_UCS4)-1))) __PYX_ERR(0, 29, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    (__pyx_v_c_string_2[__pyx_v_i]) = __pyx_t_6;
-  }
-
-  /* "editdistpy/levenshtein.pyx":30
- *     for i in range(len_2):
- *         c_string_2[i] = ord(string_2[i])
->>>>>>> master
  *     dist = Distance(c_string_1, c_string_2, len_1, len_2, max_distance)             # <<<<<<<<<<<<<<
  *     free(c_string_1)
  *     free(c_string_2)
  */
-<<<<<<< HEAD
   __pyx_t_9 = __Pyx_PyInt_As_int64_t(__pyx_v_max_distance); if (unlikely((__pyx_t_9 == ((int64_t)-1)) && PyErr_Occurred())) __PYX_ERR(0, 38, __pyx_L1_error)
   __pyx_v_dist = Distance(__pyx_v_c_string_1, __pyx_v_c_string_2, __pyx_v_len_1, __pyx_v_len_2, __pyx_t_9);
 
   /* "editdistpy/levenshtein.pyx":39
  * 
-=======
-  __pyx_t_7 = __Pyx_PyInt_As_int64_t(__pyx_v_max_distance); if (unlikely((__pyx_t_7 == ((int64_t)-1)) && PyErr_Occurred())) __PYX_ERR(0, 30, __pyx_L1_error)
-  __pyx_v_dist = Distance(__pyx_v_c_string_1, __pyx_v_c_string_2, __pyx_v_len_1, __pyx_v_len_2, __pyx_t_7);
-
-  /* "editdistpy/levenshtein.pyx":31
- *         c_string_2[i] = ord(string_2[i])
->>>>>>> master
  *     dist = Distance(c_string_1, c_string_2, len_1, len_2, max_distance)
  *     free(c_string_1)             # <<<<<<<<<<<<<<
  *     free(c_string_2)
@@ -1494,11 +1408,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
  */
   free(__pyx_v_c_string_1);
 
-<<<<<<< HEAD
   /* "editdistpy/levenshtein.pyx":40
-=======
-  /* "editdistpy/levenshtein.pyx":32
->>>>>>> master
  *     dist = Distance(c_string_1, c_string_2, len_1, len_2, max_distance)
  *     free(c_string_1)
  *     free(c_string_2)             # <<<<<<<<<<<<<<
@@ -1506,11 +1416,7 @@ static int __pyx_f_10editdistpy_11levenshtein_distance(PyObject *__pyx_v_string_
  */
   free(__pyx_v_c_string_2);
 
-<<<<<<< HEAD
   /* "editdistpy/levenshtein.pyx":41
-=======
-  /* "editdistpy/levenshtein.pyx":33
->>>>>>> master
  *     free(c_string_1)
  *     free(c_string_2)
  *     return dist             # <<<<<<<<<<<<<<
@@ -1703,11 +1609,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-<<<<<<< HEAD
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 30, __pyx_L1_error)
-=======
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 26, __pyx_L1_error)
->>>>>>> master
   return 0;
   __pyx_L1_error:;
   return -1;

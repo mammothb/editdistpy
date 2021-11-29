@@ -21,8 +21,8 @@ int Distance(
   if (maxDistance <= 0) {
     return ZeroDistanceResults(pString1, pString2, stringLen1, stringLen2);
   }
-  if (stringLen2 - stringLen1 > maxDistance ||
-      stringLen2 - stringLen1 < -maxDistance) {
+  if (stringLen2 - stringLen1 > maxDistance
+      || stringLen2 - stringLen1 < -maxDistance) {
     return -1;
   }
   if (stringLen1 > stringLen2) {

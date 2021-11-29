@@ -11,13 +11,13 @@ cdef extern from "_damerau_osa.hpp":
         const int* pString2,
         int stringLen1,
         int stringLen2,
-        const int64_t maxDistance
+        const int64_t maxDistance,
     )
 
 cpdef int distance(
     object string_1,
     object string_2,
-    object max_distance
+    object max_distance,
 ) except +:
     cdef int len_1 = 0
     cdef int* c_string_1 = NULL
