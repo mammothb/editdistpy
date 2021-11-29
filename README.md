@@ -8,7 +8,6 @@ the Damerau-Levenshtein optimal string alignment (OSA) edit distance
 algorithms. The original C# project can be found at [SoftWx.Match](https://github.com/softwx/SoftWx.Match).
 
 ## Installation
----------------
 
 The easiest way to install editdistpy is using `pip`:
 ```
@@ -16,7 +15,6 @@ pip install -U editdistpy
 ```
 
 ## Usage
---------
 
 You can specify the `max_distance` you care about, if the edit distance exceeds
 this `max_distance`, `-1` will be returned. Specifying a sensible max distance
@@ -64,7 +62,6 @@ print(damerau_osa.distance(string_1, string_2, max_distance))
 ```
 
 ## Benchmark
-------------
 
 A simple benchmark was done on Python 3.8.12 against [editdistance](https://github.com/roy-ht/editdistance) which implements the Levenshtein edit distance
 algorithm.
@@ -134,6 +131,5 @@ be the more suitable library if your use case mainly deals with comparing short
 strings.
 
 ## Changelog
-------------
 
 See the [changelog](https://github.com/mammothb/editdistpy/blob/master/CHANGELOG.md) for a history of notable changes to edistdistpy.
