@@ -56,3 +56,17 @@ class TestDamerauOsa:
                 assert expected_damerau_osa(s1, s2, max_distance) == actual_damerau_osa(
                     s1, s2, max_distance
                 )
+
+    def test_compare_match_ref_cython(self, get_strings):
+        strings, max_distance = get_strings
+
+        for s1 in strings:
+            for s2 in strings:
+                assert expected_damerau_osa(
+                    s1, s2, max_distance
+                ) == damerau_osa.distance(s1, s2, max_distance)
+
+    def test_comparer_null_distance(self, get_short_and_long_strings):
+        for s1, s2, expected in get_short_and_long_strings:
+            distance = damerau_osa.distance(s1, s2, 10)
+            assert expected["null"] == distance

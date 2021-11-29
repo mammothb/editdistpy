@@ -88,7 +88,6 @@ ext_modules = [
         "editdistpy.levenshtein",
         [
             "editdistpy/_levenshtein.cpp",
-            "editdistpy/_helpers.cpp",
             "editdistpy/levenshtein.pyx",
         ],
         include_dirs=["./editdistpy"],
@@ -100,7 +99,6 @@ ext_modules = [
         "editdistpy.damerau_osa",
         [
             "editdistpy/_damerau_osa.cpp",
-            "editdistpy/_helpers.cpp",
             "editdistpy/damerau_osa.pyx",
         ],
         include_dirs=["./editdistpy"],
