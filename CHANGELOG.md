@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v0.1.3 (tbd)
+------------
+- Fix build from source on macOS
+
 v0.1.2 (2021-11-27)
 -------------------
 - Add all C++ header and source files in source distribution
