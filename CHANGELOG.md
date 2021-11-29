@@ -1,8 +1,8 @@
 Changelog
 =========
 
-v0.1.3 (tbd)
-------------
+v0.1.3 (2021-11-29)
+-------------------
 - Fix build from source on macOS
 - Handles distance calculation when one of the input strings is `None`
 - Handles distance calculation when `max_distance=0`
