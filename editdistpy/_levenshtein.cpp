@@ -5,6 +5,21 @@
 
 #include "_helpers.hpp"
 
+static constexpr uint8_t kOpsMatrix[9][8] = {
+    // maxDistance=1
+    {0x03}, // lenDiff=0
+    {0x01}, // lenDiff=1
+    // maxDistance=2
+    {0x0f, 0x09, 0x06}, // lenDiff=0
+    {0x0d, 0x07},       // lenDiff=1
+    {0x05},             // lenDiff=2
+    // maxDistance=3
+    {0x3f, 0x27, 0x2d, 0x39, 0x36, 0x1e, 0x1b}, // lenDiff=0
+    {0x3d, 0x37, 0x1f, 0x25, 0x19, 0x16},       // lenDiff=1
+    {0x35, 0x1d, 0x17},                         // lenDiff=2
+    {0x15},                                     // lenDiff=3
+};
+
 int Distance(
     const int* pString1
   , const int* pString2
