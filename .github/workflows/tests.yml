@@ -42,7 +42,7 @@ jobs:
       - name: Copy wheel
         run: cp dist/editdistpy-*.tar.gz editdistpy.tar.gz
       - name: Build wheel
-        uses: pypa/cibuildwheels@2.17.0
+        uses: pypa/cibuildwheel@2.17.0
         env:
           CIBW_ARCHS_LINUX: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.python_tag }}
