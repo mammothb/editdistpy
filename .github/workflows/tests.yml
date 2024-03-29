@@ -49,7 +49,7 @@ jobs:
           CIBW_BUILD_VERBOSITY: 3
           CIBW_BEFORE_TEST: pip install symspellpy --no-deps
           CIBW_TEST_REQUIRES: pytest numpy
-          CIBW_TEST_COMMAND: pytest --traceconfig -sv {project}/tests
+          CIBW_TEST_COMMAND: python -m pytest --traceconfig -sv {project}/tests
         with:
           package-dir: editdistpy.tar.gz
           output-dir: wheelhouse
