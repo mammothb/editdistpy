@@ -123,7 +123,7 @@ jobs:
       - name: Download wheels
         uses: actions/download-artifact@v4
         with:
-          name: wheels
+          pattern: artifact-*
           path: dist
 
       - name: Show files to upload
