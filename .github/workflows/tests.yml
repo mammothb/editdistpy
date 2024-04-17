@@ -110,7 +110,7 @@ jobs:
       - name: Build wheel
         uses: pypa/cibuildwheel@v2.17.0
         env:
-          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
+          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.python_tag }}
           CIBW_BUILD_VERBOSITY: 3
           CIBW_BEFORE_TEST: pip install symspellpy --no-deps
