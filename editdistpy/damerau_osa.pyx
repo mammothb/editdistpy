@@ -4,7 +4,7 @@
 
 from libc.stdlib cimport malloc, free
 
-cdef extern from "_damerau_osa.hpp":
+cdef extern from "_damerau_osa.h":
     ctypedef int int64_t
     int Distance(
         const int* pString1,

@@ -1,3 +1,47 @@
 [build-system]
-requires = ["setuptools>=58.0.4", "wheel", "Cython>=0.29.24"]
+requires = ["setuptools>=61.0.0", "Cython>=3.0.8"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "editdistpy"
+version = "0.1.4"
+requires-python = ">=3.8"
+authors = [
+    {name = "mmb L"},
+]
+description = "Fast Levenshtein and Damerau optimal string alignment algorithms."
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["edit distance", "levenshtein", "damerau"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Operating System :: MacOS",
+    "Programming Language :: C++",
+    "Programming Language :: Cython",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+
+[project.urls]
+Repository = "https://github.com/mammothb/editdistpy"
+Changelog = "https://github.com/mammothb/editdistpy/blob/master/CHANGELOG.md"
+
+[tool.basedpyright]
+reportUnusedCallResult = "none"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["editdistpy"]
