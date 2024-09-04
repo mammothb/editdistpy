@@ -1,0 +1,160 @@
+name: Wheel builder
+
+on: [pull_request]
+
+jobs:
+  build_sdist:
+    name: Build source distribution
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout editdistpy
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build sdist
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build
+          python -m build --sdist
+
+      - name: Upload sdist
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-sdist
+          path: ./dist/*
+
+      - name: Sanity check sdist files
+        run: |
+          ls ./dist
+
+      - name: Output sdist name
+        id: save-path
+        run: |
+          echo "sdist_name=$(ls ./dist)" >> "${GITHUB_OUTPUT}"
+        shell: bash -el {0}
+
+  build_wheels_linux:
+    needs: [build_sdist]
+    name: Build wheels for ubuntu-latest/${{ matrix.arch }}/${{ matrix.python_tag }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86_64]
+        python_tag: ["cp38-*", "cp39-*", "cp310-*", "cp311-*", "cp312-*"]
+    steps:
+      - name: Checkout editdistpy
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # - uses: actions/download-artifact@v4
+      #   with:
+      #     name: artifact-sdist
+      #     path: dist
+      #
+      # - name: Copy wheel
+      #   run: cp dist/editdistpy-*.tar.gz editdistpy.tar.gz
+
+      - name: Build wheel
+        uses: pypa/cibuildwheel@v2.17.0
+        env:
+          CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+          CIBW_BUILD: ${{ matrix.python_tag }}
+          CIBW_BUILD_VERBOSITY: 3
+          CIBW_BEFORE_TEST: pip install symspellpy --no-deps
+          CIBW_TEST_REQUIRES: pytest numpy
+          CIBW_TEST_COMMAND: python -m pytest --traceconfig -sv {project}/tests
+        with:
+          output-dir: wheelhouse
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifact-${{ github.job }}-${{ strategy.job-index }}
+          path: ./wheelhouse/*.whl
+
+  build_wheels_macos:
+    needs: [build_sdist]
+    name: Build wheels for macos-latest/${{ matrix.arch }}/${{ matrix.python_tag }}
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86_64, arm64]
+        python_tag: ["cp38-*", "cp39-*", "cp310-*", "cp311-*", "cp312-*"]
+    steps:
+      - name: Checkout editdistpy
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # - uses: actions/download-artifact@v4
+      #   with:
+      #     name: artifact-sdist
+      #     path: dist
+      #
+      # - name: Copy wheel
+      #   run: cp dist/editdistpy-*.tar.gz editdistpy.tar.gz
+
+      - name: Build wheel
+        uses: pypa/cibuildwheel@v2.17.0
+        env:
+          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
+          CIBW_BUILD: ${{ matrix.python_tag }}
+          CIBW_BUILD_VERBOSITY: 3
+          CIBW_BEFORE_TEST: pip install symspellpy --no-deps
+          CIBW_TEST_REQUIRES: pytest numpy
+          CIBW_TEST_COMMAND: python -m pytest --traceconfig -sv {project}/tests
+        with:
+          output-dir: wheelhouse
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifact-${{ github.job }}-${{ strategy.job-index }}
+          path: ./wheelhouse/*.whl
+
+  build_wheels_windows:
+    needs: [build_sdist]
+    name: Build wheels for windows-latest/${{ matrix.arch }}/${{ matrix.python_tag }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [AMD64]
+        python_tag: ["cp38-*", "cp39-*", "cp310-*", "cp311-*", "cp312-*"]
+    steps:
+      - name: Checkout editdistpy
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # - uses: actions/download-artifact@v4
+      #   with:
+      #     name: artifact-sdist
+      #     path: dist
+      #
+      # - name: Copy wheel
+      #   run: cp dist/editdistpy-*.tar.gz editdistpy.tar.gz
+
+      - name: Build wheel
+        uses: pypa/cibuildwheel@v2.17.0
+        env:
+          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
+          CIBW_BUILD: ${{ matrix.python_tag }}
+          CIBW_BUILD_VERBOSITY: 3
+          CIBW_BEFORE_TEST: pip install symspellpy --no-deps
+          CIBW_TEST_REQUIRES: pytest numpy
+          CIBW_TEST_COMMAND: python -m pytest --traceconfig -sv {project}/tests
+        with:
+          output-dir: wheelhouse
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifact-${{ github.job }}-${{ strategy.job-index }}
+          path: ./wheelhouse/*.whl
