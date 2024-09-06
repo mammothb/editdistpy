@@ -1,4 +1,4 @@
-from symspellpy.helpers import null_distance_results
+from fortests.helpers import null_distance_results
 
 from editdistpy import levenshtein
 
