@@ -1,0 +1,22 @@
+name: Build editdistpy
+description: Installs editdistpy
+
+runs:
+  using: composite
+  steps:
+    - name: Environment detail
+      run: |
+        pip list --pre
+      shell: bash -el {0}
+
+    - name: Uninstall existing editdistpy
+      run: |
+        if pip show editdistpy 1>/dev/null; then
+          pip uninstall -y editdistpy
+        fi
+      shell: bash -el {0}
+
+    - name: Build editdistpy
+      run: |
+        pip install -v .
+      shell: bash -el {0}

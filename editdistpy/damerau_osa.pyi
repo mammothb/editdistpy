@@ -12,7 +12,6 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
-"""Fast Levenshtein and Damerau optimal string alignment algorithms."""
+from typing import Optional
 
-from . import damerau_osa as damerau_osa
-from . import levenshtein as levenshtein
+def distance(string_1: Optional[str], string_2: Optional[str], max_distance: int) -> int: ...

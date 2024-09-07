@@ -1,28 +1,39 @@
-#include "_damerau_osa.hpp"
+/**
+ * MIT License
+ *
+ * Copyright (c) 2024 mmb L
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+
+#include "_damerau_osa.h"
 
 #include <algorithm>
 #include <cstdlib>
 
-#include "_helpers.hpp"
+#include "_helpers.h"
 
 const int kSpace = 32;
 
-int Distance(
-    const int* pString1
-  , const int* pString2
-  , int stringLen1
-  , int stringLen2
-  , const int64_t maxDistance)
-{
+int Distance(const int *pString1, const int *pString2, int stringLen1,
+             int stringLen2, const int64_t maxDistance) {
   if (pString1 == NULL || pString2 == NULL) {
     return NullDistanceResults(pString1, pString2, stringLen1, stringLen2,
-        maxDistance);
+                               maxDistance);
   }
   if (maxDistance <= 0) {
     return ZeroDistanceResults(pString1, pString2, stringLen1, stringLen2);
   }
-  if (stringLen2 - stringLen1 > maxDistance
-      || stringLen2 - stringLen1 < -maxDistance) {
+  if (stringLen2 - stringLen1 > maxDistance ||
+      stringLen2 - stringLen1 < -maxDistance) {
     return -1;
   }
   if (stringLen1 > stringLen2) {
@@ -30,8 +41,7 @@ int Distance(
     std::swap(stringLen1, stringLen2);
   }
   // Trim suffix
-  while (stringLen1 != 0
-      && pString1[~-stringLen1] == pString2[~-stringLen2]) {
+  while (stringLen1 != 0 && pString1[~-stringLen1] == pString2[~-stringLen2]) {
     --stringLen1;
     --stringLen2;
   }
@@ -52,20 +62,15 @@ int Distance(
   }
   if (maxDistance < stringLen2) {
     return InternalDistanceMax(pString1, pString2, stringLen1, stringLen2,
-        start, maxDistance);
+                               start, maxDistance);
   }
   return InternalDistance(pString1, pString2, stringLen1, stringLen2, start);
 }
 
-int InternalDistance(
-    const int* pString1
-  , const int* pString2
-  , const int len1
-  , const int len2
-  , const int start)
-{
-  int* p_prev_char_1_costs = (int*)calloc(len2, sizeof(int));
-  int* p_char_1_costs = (int*)malloc(len2 * sizeof(int));
+int InternalDistance(const int *pString1, const int *pString2, const int len1,
+                     const int len2, const int start) {
+  int *p_prev_char_1_costs = (int *)calloc(len2, sizeof(int));
+  int *p_char_1_costs = (int *)malloc(len2 * sizeof(int));
   for (int i = 0; i < len2; ++i) {
     p_char_1_costs[i] = i + 1;
   }
@@ -98,11 +103,8 @@ int InternalDistance(
           current_cost = left_char_cost;
         }
         ++current_cost;
-        if (i != 0
-            && j != 0
-            && char_1 == prev_char_2
-            && prev_char_1 == char_2
-            && this_trans_cost + 1 < current_cost) {
+        if (i != 0 && j != 0 && char_1 == prev_char_2 &&
+            prev_char_1 == char_2 && this_trans_cost + 1 < current_cost) {
           // transposition
           current_cost = this_trans_cost + 1;
         }
@@ -116,16 +118,11 @@ int InternalDistance(
   return current_cost;
 }
 
-int InternalDistanceMax(
-    const int* pString1
-  , const int* pString2
-  , const int len1
-  , const int len2
-  , const int start
-  , const int64_t maxDistance)
-{
-  int* p_prev_char_1_costs = (int*)calloc(len2, sizeof(int));
-  int* p_char_1_costs = (int*)malloc(len2 * sizeof(int));
+int InternalDistanceMax(const int *pString1, const int *pString2,
+                        const int len1, const int len2, const int start,
+                        const int64_t maxDistance) {
+  int *p_prev_char_1_costs = (int *)calloc(len2, sizeof(int));
+  int *p_char_1_costs = (int *)malloc(len2 * sizeof(int));
   for (int i = 0; i < len2; ++i) {
     p_char_1_costs[i] = i + 1;
   }
@@ -171,11 +168,8 @@ int InternalDistanceMax(
           current_cost = left_char_cost;
         }
         ++current_cost;
-        if (i != 0
-            && j != 0
-            && char_1 == prev_char_2
-            && prev_char_1 == char_2
-            && this_trans_cost + 1 < current_cost) {
+        if (i != 0 && j != 0 && char_1 == prev_char_2 &&
+            prev_char_1 == char_2 && this_trans_cost + 1 < current_cost) {
           // transposition
           current_cost = this_trans_cost + 1;
         }

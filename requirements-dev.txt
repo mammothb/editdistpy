@@ -1,3 +1,1 @@
-numpy>=1.19.5
-pytest==6.2.5
-symspellpy
+pytest==8.3.2
