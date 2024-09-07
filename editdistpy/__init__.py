@@ -13,3 +13,6 @@
 # copies or substantial portions of the Software.
 
 """Fast Levenshtein and Damerau optimal string alignment algorithms."""
+
+from . import damerau_osa as damerau_osa
+from . import levenshtein as levenshtein
