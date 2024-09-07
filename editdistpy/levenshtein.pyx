@@ -4,7 +4,7 @@
 
 from libc.stdlib cimport malloc, free
 
-cdef extern from "_levenshtein.hpp":
+cdef extern from "_levenshtein.h":
     ctypedef int int64_t
     int Distance(
         const int* pString1,

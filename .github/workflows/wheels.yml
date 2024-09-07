@@ -1,0 +1,96 @@
+name: Wheel builder
+
+on:
+  pull_request:
+    types: [labeled, opened, synchronize, reopened]
+  schedule:
+    # Runs every friday
+    - cron: "0 0 * * 5"
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  build_sdist:
+    name: Build source distribution
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_call' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' &&
+      contains(github.event.pull_request.labels.*.name, 'build'))
+    runs-on: ubuntu-latest
+    outputs:
+      sdist_file: ${{ steps.save-path.outputs.sdist_name }}
+    steps:
+      - name: Checkout editdistpy
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build sdist
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build
+          python -m build --sdist
+
+      - name: Upload sdist
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-sdist
+          path: ./dist/*
+
+      - name: Sanity check sdist files
+        run: |
+          ls ./dist
+
+      - name: Output sdist name
+        id: save-path
+        run: |
+          echo "sdist_name=$(ls ./dist)" >> "${GITHUB_OUTPUT}"
+        shell: bash -el {0}
+
+  build_wheels:
+    needs: [build_sdist]
+    name: Build wheels for ${{ matrix.build_platform[1] }}-${{ matrix.python[0] }}
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' &&
+      contains(github.event.pull_request.labels.*.name, 'build'))
+    runs-on: ${{ matrix.build_platform[0] }}
+    strategy:
+      fail-fast: false
+      matrix:
+        build_platform:
+          - [ubuntu-latest, manylinux_x86_64]
+          - [ubuntu-latest, musllinux_x86_64]
+          - [macos-latest, macosx_x86_64]
+          - [macos-latest, macosx_arm64]
+          - [windows-latest, win_amd64]
+        python:
+          - ["cp38", "3.8"]
+          - ["cp39", "3.9"]
+          - ["cp310", "3.10"]
+          - ["cp311", "3.11"]
+          - ["cp312", "3.12"]
+    steps:
+      - name: Checkout editdistpy
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build wheel
+        uses: pypa/cibuildwheel@v2.20.0
+        with:
+          output-dir: wheelhouse
+
+      - name: Upload wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifact-${{ matrix.build_platform[1] }}-${{ matrix.python[0] }}
+          path: ./wheelhouse/*.whl

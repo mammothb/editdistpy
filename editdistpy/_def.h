@@ -1,5 +1,5 @@
-#ifndef EDITDISTPY_DEF_H_
-#define EDITDISTPY_DEF_H_
+#ifndef EDITDISTPY__DEF_H_
+#define EDITDISTPY__DEF_H_
 
 #if defined(_WIN32) && _MSC_VER <= 1600
 typedef signed __int32 int32_t;
@@ -10,4 +10,4 @@ typedef unsigned __int64 uint64_t;
 #include <cstdint>
 #endif
 
-#endif  // EDITDISTPY_DEF_H_
+#endif // EDITDISTPY__DEF_H_
