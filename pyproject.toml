@@ -42,6 +42,19 @@ Changelog = "https://github.com/mammothb/editdistpy/blob/master/CHANGELOG.md"
 [tool.basedpyright]
 reportUnusedCallResult = "none"
 
+[tool.cibuildwheel]
+skip = "cp36-* cp37-* pp* *_i686 *_ppc64le *_s390x"
+
+environment = {LDFLAGS="-Wl,--strip-all"}
+build-verbosity = "3"
+
+test-command = "pytest --traceconfig -sv {package}/tests"
+test-requires = ["pytest==8.3.2"]
+
+[[tool.cibuildwheel.overrides]]
+select = "*-macosx*"
+environment = {CFLAGS="-g0"}
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["editdistpy"]
