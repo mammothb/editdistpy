@@ -2,11 +2,22 @@ name: Wheel builder
 
 on:
   pull_request:
+    types: [labeled, opened, synchronize, reopened]
+  schedule:
+    # Runs every friday
+    - cron: "0 0 * * 5"
+  workflow_call:
   workflow_dispatch:
 
 jobs:
   build_sdist:
     name: Build source distribution
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_call' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' &&
+      contains(github.event.pull_request.labels.*.name, 'build'))
     runs-on: ubuntu-latest
     outputs:
       sdist_file: ${{ steps.save-path.outputs.sdist_name }}
@@ -46,6 +57,11 @@ jobs:
   build_wheels:
     needs: [build_sdist]
     name: Build wheels for ${{ matrix.build_platform[1] }}-${{ matrix.python[0] }}
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' &&
+      contains(github.event.pull_request.labels.*.name, 'build'))
     runs-on: ${{ matrix.build_platform[0] }}
     strategy:
       fail-fast: false
@@ -76,5 +92,5 @@ jobs:
       - name: Upload wheel
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.build_platform[1] }}-${{ matrix.python[0] }}
+          name: artifact-${{ matrix.build_platform[1] }}-${{ matrix.python[0] }}
           path: ./wheelhouse/*.whl
