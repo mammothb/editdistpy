@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.1.5 (2024-09-08)
+-------------------
+- Add stub files
+- Add bounded Levenshtein distance algorithm by Fujimoto
+
 v0.1.3 (2021-11-29)
 -------------------
 - Fix build from source on macOS
