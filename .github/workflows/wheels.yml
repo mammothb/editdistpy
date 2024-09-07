@@ -69,7 +69,7 @@ jobs:
         build_platform:
           - [ubuntu-latest, manylinux_x86_64]
           - [ubuntu-latest, musllinux_x86_64]
-          - [macos-latest, macosx_x86_64]
+          - [macos-latest-large, macosx_x86_64]
           - [macos-latest, macosx_arm64]
           - [windows-latest, win_amd64]
         python:
