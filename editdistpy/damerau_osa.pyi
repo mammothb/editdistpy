@@ -1,0 +1,3 @@
+from typing import Optional
+
+def distance(string_1: Optional[str], string_2: Optional[str], max_distance: int) -> int: ...
