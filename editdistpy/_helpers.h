@@ -1,17 +1,19 @@
 #ifndef EDITDISTPY__HELPERS_H_
 #define EDITDISTPY__HELPERS_H_
 
+#include <cstring>
+
+#include "_def.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <cstring>
-
 inline int NullDistanceResults(const int *pString1, const int *pString2,
                                int stringLen1, int stringLen2,
                                const int64_t maxDistance) {
-  if (pString1 == NULL) {
-    if (pString2 == NULL) {
+  if (pString1 == nullptr) {
+    if (pString2 == nullptr) {
       return 0;
     }
     return stringLen2 <= maxDistance ? stringLen2 : -1;

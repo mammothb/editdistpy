@@ -10,6 +10,9 @@ extern "C" {
 int Distance(const int *pString1, const int *pString2, int stringLen1,
              int stringLen2, const int64_t maxDistance);
 
+int Fujimoto2018(const int *pString1, const int *pString2, const int len1,
+                 const int len2, const int start, const int64_t maxDistance);
+
 int InternalDistance(const int *pString1, const int *pString2, const int len1,
                      const int len2, const int start);
 
