@@ -2,12 +2,34 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <iostream>
 
+#include "_def.h"
 #include "_helpers.h"
+
+/**
+ * Matrix of all the possible edit sequences.
+ *
+ * 01 = DELETE, 10 = INSERT, 11 = REPLACE
+ */
+static constexpr uint8_t kOpsMatrix[9][8] = {
+    // maxDistance=1
+    {0x03}, // lenDiff=0
+    {0x01}, // lenDiff=1
+    // maxDistance=2
+    {0x0f, 0x09, 0x06}, // lenDiff=0
+    {0x0d, 0x07},       // lenDiff=1
+    {0x05},             // lenDiff=2
+    // maxDistance=3
+    {0x3f, 0x27, 0x2d, 0x39, 0x36, 0x1e, 0x1b}, // lenDiff=0
+    {0x3d, 0x37, 0x1f, 0x25, 0x19, 0x16},       // lenDiff=1
+    {0x35, 0x1d, 0x17},                         // lenDiff=2
+    {0x15}                                      // lenDiff=3
+};
 
 int Distance(const int *pString1, const int *pString2, int stringLen1,
              int stringLen2, const int64_t maxDistance) {
-  if (pString1 == NULL || pString2 == NULL) {
+  if (pString1 == nullptr || pString2 == nullptr) {
     return NullDistanceResults(pString1, pString2, stringLen1, stringLen2,
                                maxDistance);
   }
@@ -42,11 +64,51 @@ int Distance(const int *pString1, const int *pString2, int stringLen1,
   if (stringLen1 == 0) {
     return stringLen2 <= maxDistance ? stringLen2 : -1;
   }
+  if (maxDistance < 4) {
+    return Fujimoto2018(pString2, pString1, stringLen2, stringLen1, start,
+                        maxDistance);
+  }
   if (maxDistance < stringLen2) {
     return InternalDistanceMax(pString1, pString2, stringLen1, stringLen2,
                                start, maxDistance);
   }
   return InternalDistance(pString1, pString2, stringLen1, stringLen2, start);
+}
+
+int Fujimoto2018(const int *pString1, const int *pString2, const int len1,
+                 const int len2, const int start, const int64_t maxDistance) {
+  // Expects pString1 to be longer than pString2
+  const int len_diff = len1 - len2;
+  const uint8_t *p_possible_ops =
+      kOpsMatrix[(maxDistance + maxDistance * maxDistance) / 2 + len_diff - 1];
+  int64_t cost = maxDistance + 1;
+  for (int i = 0; p_possible_ops[i] != 0; ++i) {
+    uint8_t ops = p_possible_ops[i];
+    int s1_pos = 0;
+    int s2_pos = 0;
+    int64_t curr_cost = 0;
+    while (s1_pos < len1 && s2_pos < len2) {
+      if (pString1[s1_pos + start] != pString2[s2_pos + start]) {
+        ++curr_cost;
+        if (!ops) {
+          break;
+        }
+        if (ops & 1) {
+          ++s1_pos;
+        }
+        if (ops & 2) {
+          ++s2_pos;
+        }
+        ops >>= 2;
+      } else {
+        ++s1_pos;
+        ++s2_pos;
+      }
+    }
+    curr_cost += len1 - s1_pos + len2 - s2_pos;
+    cost = curr_cost < cost ? curr_cost : cost;
+  }
+  return cost <= maxDistance ? cost : -1;
 }
 
 int InternalDistance(const int *pString1, const int *pString2, const int len1,
