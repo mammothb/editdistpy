@@ -86,6 +86,8 @@ jobs:
 
       - name: Build wheel
         uses: pypa/cibuildwheel@v2.20.0
+        env:
+          CIBW_BUILD: ${{ matrix.python[0] }}-${{ matrix.build_platform[1] }}
         with:
           output-dir: wheelhouse
 
