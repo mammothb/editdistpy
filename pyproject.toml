@@ -11,11 +11,11 @@ authors = [
 ]
 description = "Fast Levenshtein and Damerau optimal string alignment algorithms."
 readme = "README.md"
-license = {file = "LICENSE"}
+license = "MIT"
+license-files = ["LICENSE"]
 keywords = ["edit distance", "levenshtein", "damerau"]
 classifiers = [
     "Development Status :: 4 - Beta",
-    "License :: OSI Approved :: MIT License",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Natural Language :: English",
