@@ -25,4 +25,4 @@ jobs:
       - name: Test
         run: |
           uv sync --no-editable
-          uv pytest
+          uv run pytest
