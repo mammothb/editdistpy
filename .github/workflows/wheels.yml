@@ -58,7 +58,6 @@ jobs:
           - [macos-latest, macosx_arm64]
           - [windows-latest, win_amd64]
         python:
-          - ["cp38", "3.8"]
           - ["cp39", "3.9"]
           - ["cp310", "3.10"]
           - ["cp311", "3.11"]
