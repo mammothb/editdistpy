@@ -5,7 +5,7 @@ runs:
   steps:
     - name: Environment detail
       run: |
-        uv pip list --pre
+        uv pip list
       shell: bash -el {0}
     - name: Uninstall existing editdistpy
       run: |
