@@ -10,6 +10,7 @@ jobs:
   build_wheels:
     uses: ./.github/workflows/wheels.yml
   test-publish:
+    if: ${{ github.event.inputs.pypi_repo == 'testpypi' }}
     runs-on: ubuntu-latest
     environment:
       name: testpypi
@@ -38,9 +39,8 @@ jobs:
         uses: pypa/gh-action-pypi-publish@v1.12.4
         with:
           repository_url: https://test.pypi.org/legacy/
-        if: ${{ github.event.inputs.pypi_repo == 'testpypi' }}
   publish:
-    name: Publish to TestPyPI and PyPI
+    if: ${{ github.event.inputs.pypi_repo == 'pypi' }}
     runs-on: ubuntu-latest
     environment:
       name: testpypi
@@ -67,4 +67,3 @@ jobs:
         shell: bash
       - name: Publish package to PyPI
         uses: pypa/gh-action-pypi-publish@v1.12.4
-        if: ${{ github.event.inputs.pypi_repo == 'pypi' }}
