@@ -43,7 +43,7 @@ jobs:
     if: ${{ github.event.inputs.pypi_repo == 'pypi' }}
     runs-on: ubuntu-latest
     environment:
-      name: testpypi
+      name: pypi
     permissions:
       contents: read
       id-token: write
