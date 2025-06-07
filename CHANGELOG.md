@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.1.6 (2025-06-07)
+-------------------
+- Drop Python 3.8 support
+- Provide wheels for Python 3.13
+
 v0.1.5 (2024-09-08)
 -------------------
 - Add stub files

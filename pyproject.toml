@@ -9,7 +9,7 @@ dev = [
 
 [project]
 name = "editdistpy"
-version = "0.1.6rc2"
+version = "0.1.6"
 requires-python = ">=3.9"
 authors = [
     {name = "mmb L"},
