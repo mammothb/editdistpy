@@ -20,7 +20,7 @@ import sys
 from sysconfig import get_config_vars
 
 from Cython.Build import cythonize
-from pkg_resources import parse_version
+from packaging.version import parse as parse_version
 from setuptools import Extension, setup
 
 

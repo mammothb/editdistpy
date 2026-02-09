@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=77.0.3", "Cython>=3.0.8"]
+requires = ["setuptools>=77.0.3", "Cython>=3.0.8", "packaging"]
 build-backend = "setuptools.build_meta"
 
 [dependency-groups]
