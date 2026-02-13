@@ -17,7 +17,7 @@ jobs:
       sdist_file: ${{ steps.save-path.outputs.sdist_name }}
     steps:
       - name: Checkout editdistpy
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Set up Python
@@ -65,7 +65,7 @@ jobs:
           - ["cp313", "3.13"]
     steps:
       - name: Checkout editdistpy
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Build wheel
