@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.2.0 (2026-02-13)
+-------------------
+- Fix build on macOS
+- Provide wheels for Linux aarch64
+
 v0.1.6 (2025-06-07)
 -------------------
 - Drop Python 3.8 support
