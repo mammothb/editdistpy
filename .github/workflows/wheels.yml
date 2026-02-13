@@ -54,6 +54,7 @@ jobs:
         build_platform:
           - [ubuntu-latest, manylinux_x86_64]
           - [ubuntu-latest, musllinux_x86_64]
+          - [ubuntu-24.04-arm, manylinux_aarch64]
           - [macos-15-intel, macosx_x86_64]
           - [macos-latest, macosx_arm64]
           - [windows-latest, win_amd64]
@@ -69,7 +70,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Build wheel
-        uses: pypa/cibuildwheel@298ed2fb2c105540f5ed055e8a6ad78d82dd3a7e # v3.3.1
+        uses: pypa/cibuildwheel@v3.3.1
         env:
           CIBW_BUILD: ${{ matrix.python[0] }}-${{ matrix.build_platform[1] }}
         with:
