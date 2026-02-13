@@ -30,7 +30,7 @@ jobs:
           python -m pip install build
           python -m build --sdist
       - name: Upload sdist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: artifact-sdist
           path: ./dist/*
@@ -75,7 +75,7 @@ jobs:
         with:
           output-dir: wheelhouse
       - name: Upload wheel
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: artifact-${{ matrix.build_platform[1] }}-${{ matrix.python[0] }}
           path: ./wheelhouse/*.whl
