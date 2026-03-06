@@ -70,7 +70,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Build wheel
-        uses: pypa/cibuildwheel@v3.3.1
+        uses: pypa/cibuildwheel@v3.4.0
         env:
           CIBW_BUILD: ${{ matrix.python[0] }}-${{ matrix.build_platform[1] }}
         with:
