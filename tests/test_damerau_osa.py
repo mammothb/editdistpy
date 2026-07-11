@@ -1,8 +1,9 @@
 from editdistpy import damerau_osa
-from fortests.helpers import null_distance_results
+
+from .fortests.helpers import null_distance_results
 
 
-def expected_damerau_osa(string_1, string_2, max_distance):
+def expected_damerau_osa(string_1: str, string_2: str, max_distance: int) -> int:
     max_distance = int(min(2**31 - 1, max_distance))
     len_1 = len(string_1)
     len_2 = len(string_2)
@@ -27,7 +28,7 @@ def expected_damerau_osa(string_1, string_2, max_distance):
     return distance if distance <= max_distance else -1
 
 
-def actual_damerau_osa(string_1, string_2, max_distance):
+def actual_damerau_osa(string_1: str | None, string_2: str | None, max_distance: int) -> int:
     if string_1 is None or string_2 is None:
         return null_distance_results(string_1, string_2, max_distance)
     if max_distance <= 0:
@@ -47,7 +48,7 @@ def actual_damerau_osa(string_1, string_2, max_distance):
 
 
 class TestDamerauOsa:
-    def test_compare_match_ref(self, get_strings):
+    def test_compare_match_ref(self, get_strings: tuple[list[str], int]):
         strings, max_distance = get_strings
 
         for s1 in strings:
@@ -56,7 +57,7 @@ class TestDamerauOsa:
                     s1, s2, max_distance
                 )
 
-    def test_compare_match_ref_cython(self, get_strings):
+    def test_compare_match_ref_cython(self, get_strings: tuple[list[str], int]):
         strings, max_distance = get_strings
 
         for s1 in strings:
@@ -65,7 +66,9 @@ class TestDamerauOsa:
                     s1, s2, max_distance
                 )
 
-    def test_comparer_null_distance(self, get_short_and_long_strings):
+    def test_comparer_null_distance(
+        self, get_short_and_long_strings: list[tuple[str | None, str | None, dict[str, int]]]
+    ):
         for s1, s2, expected in get_short_and_long_strings:
             distance = damerau_osa.distance(s1, s2, 10)
             assert expected["null"] == distance

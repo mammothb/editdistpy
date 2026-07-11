@@ -15,19 +15,19 @@ long = (
 )
 
 
-def test_damerau_osa(s1, s2, max_distance):
+def test_damerau_osa(s1: str, s2: str, max_distance: int):
     damerau_osa.distance(s1, s2, max_distance)
 
 
-def test_levenshtein(s1, s2, max_distance):
+def test_levenshtein(s1: str, s2: str, max_distance: int):
     levenshtein.distance(s1, s2, max_distance)
 
 
-def test_editdistance(s1, s2, _):
+def test_editdistance(s1: str, s2: str, _):
     editdistance.eval(s1, s2)
 
 
-def show_results(name, result, count):
+def show_results(name: str, result: float, count: int):
     print(name, end=" ")
 
     per_pass = 1000000 * (result / count)

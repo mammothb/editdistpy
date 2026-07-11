@@ -1,4 +1,4 @@
-def null_distance_results(string1: str, string2: str, max_distance: int) -> int:
+def null_distance_results(string1: str | None, string2: str | None, max_distance: int) -> int:
     """Determines the proper return value of an edit distance function when one
     or both strings are null.
 

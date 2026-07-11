@@ -39,18 +39,25 @@ Changelog = "https://github.com/mammothb/editdistpy/blob/master/CHANGELOG.md"
 [dependency-groups]
 dev = [
     "basedpyright==1.39.3",
+    "editdistance==0.8.1",
     "pytest==8.3.2",
     "ruff==0.15.12",
 ]
 
+[tool.basedpyright]
+reportUnusedCallResult = "none"
+
 [tool.ruff]
 line-length = 100
 
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["editdistpy"]
+
 [tool.ruff.format]
 quote-style = "double"
-
-[tool.basedpyright]
-reportUnusedCallResult = "none"
 
 [tool.maturin]
 features = ["pyo3/extension-module", "python"]
