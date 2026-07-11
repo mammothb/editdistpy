@@ -1,18 +1,29 @@
-.PHONY: clean install reinstall uninstall
+.PHONY: build clean dev test fmt lint all
+
+build:
+	maturin build --release
 
 clean:
-	$(RM) -r build dist ./*.egg-info
-	$(RM) -r editdistpy/[!_]*.cpp
-	$(RM) -r .pytest_cache
-	find . -name __pycache__ -exec $(RM) -r {} +
+	cargo clean
+	rm -rf dist .pytest_cache
+	find . -name __pycache__ -exec rm -rf {} +
 
-test: reinstall
-	pytest
+dev:
+	maturin develop --uv
 
-install:
-	pip install -v .
+fmt:
+	cargo fmt -- --check
+	uv run ruff format --check .
 
-reinstall: clean uninstall install
+lint:
+	cargo clippy -- -D warnings
+	cargo clippy --features python -- -D warnings
+	uv run ruff check .
+	uv run basedpyright .
 
-uninstall:
-	pip uninstall -y editdistpy
+test: dev
+	cargo test
+	cargo test --features python
+	uv run pytest
+
+all: fmt lint test build

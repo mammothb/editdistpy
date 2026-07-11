@@ -1,6 +1,5 @@
-from fortests.helpers import null_distance_results
-
 from editdistpy import damerau_osa
+from fortests.helpers import null_distance_results
 
 
 def expected_damerau_osa(string_1, string_2, max_distance):
@@ -62,9 +61,9 @@ class TestDamerauOsa:
 
         for s1 in strings:
             for s2 in strings:
-                assert expected_damerau_osa(
+                assert expected_damerau_osa(s1, s2, max_distance) == damerau_osa.distance(
                     s1, s2, max_distance
-                ) == damerau_osa.distance(s1, s2, max_distance)
+                )
 
     def test_comparer_null_distance(self, get_short_and_long_strings):
         for s1, s2, expected in get_short_and_long_strings:
