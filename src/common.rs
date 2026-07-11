@@ -140,6 +140,9 @@ mod tests {
     #[case("ab", "abxx",   1, -1)] // v2 remaining len=2 > max=1 -> -1
     #[case("ab", "abxx", 2, 2)] // v2 remaining len=2 == max=2 -> Err(2)
     #[case("abc", "abcxxx", 2, -1)] // v2 remaining len=3 > max=2 -> -1
+    #[case("ab", "xxab",   1, -1)] // v2 remaining len=2 > max=1 -> -1
+    #[case("ab", "xxab", 2, 2)] // v2 remaining len=2 == max=2 -> Err(2)
+    #[case("abc", "xxxabc", 2, -1)] // v2 remaining len=3 > max=2 -> -1
     fn test_trim_affix_consumed(
         #[case] a: &str,
         #[case] b: &str,
