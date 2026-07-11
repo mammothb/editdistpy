@@ -9,20 +9,21 @@ clean:
 	find . -name __pycache__ -exec rm -rf {} +
 
 dev:
+	uv sync --group dev
 	maturin develop --uv
 
 fmt:
 	cargo fmt -- --check
-	uv run ruff format --check .
+	uv run --no-project ruff format --check .
 
 lint:
 	cargo clippy -- -D warnings
 	cargo clippy --features python -- -D warnings
-	uv run basedpyright .
+	uv run --no-project basedpyright .
 
 test: dev
 	cargo test
 	cargo test --features python
-	uv run pytest
+	uv run --no-project pytest
 
 all: fmt lint test build

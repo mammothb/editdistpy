@@ -56,3 +56,10 @@ reportUnusedCallResult = "none"
 features = ["pyo3/extension-module", "python"]
 python-source = "python"
 module-name = "editdistpy._editdistpy"
+
+[tool.uv]
+cache-keys = [
+    { file = "pyproject.toml" },
+    { file = "Cargo.toml" },
+    { file = "**/*.rs" },
+]
