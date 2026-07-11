@@ -1,0 +1,38 @@
+# General-purpose checks (Rust-native, zero-deps, instant)
+[[repos]]
+repo = "builtin"
+hooks = [
+  { id = "check-added-large-files", args = ["--maxkb=1024"] },
+  { id = "check-case-conflict" },
+  { id = "check-illegal-windows-names" },
+  { id = "check-merge-conflict" },
+  { id = "check-toml" },
+  { id = "check-yaml" },
+  { id = "end-of-file-fixer" },
+  { id = "fix-byte-order-marker" },
+  { id = "mixed-line-ending", args = ["--fix=no"] },
+  { id = "trailing-whitespace" },
+]
+
+[[repos]]
+repo = "local"
+hooks = [
+  {
+    id = "cargo-fmt",
+    name = "cargo fmt",
+    language = "system",
+    entry = "cargo",
+    args = ["fmt", "--check"],
+    files = "\\.rs$",
+    pass_filenames = false,
+  },
+  {
+    id = "cargo-clippy",
+    name = "cargo clippy",
+    language = "system",
+    entry = "cargo",
+    args = ["clippy", "--", "-D", "warnings"],
+    files = "\\.rs$",
+    pass_filenames = false,
+  },
+]
