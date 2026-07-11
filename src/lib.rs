@@ -1,3 +1,4 @@
+mod common;
 mod damerau_osa;
 mod levenshtein;
 

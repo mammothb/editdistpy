@@ -14,5 +14,8 @@ crate-type = ["cdylib"]
 [dependencies]
 pyo3 = { version = "0.28.3", features = ["generate-import-lib"] }
 
+[dev-dependencies]
+rstest = { version = "0.26.1" }
+
 [features]
 python = []
