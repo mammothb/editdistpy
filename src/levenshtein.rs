@@ -1,5 +1,6 @@
 use crate::common::{resolve_inputs, trim_affix};
 
+#[cfg_attr(not(feature = "python"), allow(dead_code))]
 pub fn distance(string_1: Option<&str>, string_2: Option<&str>, max_distance: i64) -> i32 {
     let (s1, s2) = match resolve_inputs(string_1, string_2, max_distance) {
         Ok(pair) => pair,
