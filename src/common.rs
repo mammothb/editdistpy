@@ -9,7 +9,12 @@ pub fn resolve_inputs<'a>(
             let len = s.chars().count() as i64;
             Err(if len <= max_distance { len as i32 } else { -1 })
         }
-        (Some(a), Some(b)) => Ok((a, b)),
+        (Some(a), Some(b)) => {
+            if max_distance <= 0 {
+                return Err(if a == b { 0 } else { -1 });
+            }
+            Ok((a, b))
+        }
     }
 }
 
@@ -77,6 +82,8 @@ mod tests {
     #[case(None, Some("abc"), 3, 3)] // len == max_distance
     #[case(None, Some(""), 0, 0)] // empty string, zero max
     #[case(None, Some(""), 10, 0)] // empty string, roomy max
+    #[case(Some("abc"), Some("xyz"), -1, -1)] // negative max, different -> -1
+    #[case(Some("abc"), Some("abc"), -1, 0)] // negative max, identical -> 0
     fn test_resolve_inputs_err(
         #[case] s1: Option<&str>,
         #[case] s2: Option<&str>,

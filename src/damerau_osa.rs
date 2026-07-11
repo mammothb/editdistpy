@@ -169,7 +169,7 @@ mod tests {
     use itertools::Itertools;
     use rstest::rstest;
 
-    /// Reference Damerau-Levenshtein OSA (classic O(nm) DP).
+    /// Reference Damerau-Levenshtein OSA
     fn reference_osa(s1: &str, s2: &str, max_distance: i64) -> i32 {
         let v1: Vec<char> = s1.chars().collect();
         let v2: Vec<char> = s2.chars().collect();
