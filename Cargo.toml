@@ -1,0 +1,18 @@
+[package]
+name = "editdistpy"
+version = "0.3.0"
+edition = "2024"
+description = "Fast Levenshtein and Damerau optimal string alignment algorithms."
+authors = ["mmb L"]
+repository = "https://github.com/mammothb/editdistpy"
+license = "MIT"
+
+[lib]
+name = "editdistpy"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.28.3", features = ["generate-import-lib"] }
+
+[features]
+python = []
