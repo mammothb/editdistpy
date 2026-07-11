@@ -18,7 +18,6 @@ fmt:
 lint:
 	cargo clippy -- -D warnings
 	cargo clippy --features python -- -D warnings
-	uv run ruff check .
 	uv run basedpyright .
 
 test: dev

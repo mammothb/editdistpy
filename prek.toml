@@ -35,4 +35,22 @@ hooks = [
     files = "\\.rs$",
     pass_filenames = false,
   },
+  {
+    id = "ruff-format",
+    name = "ruff format",
+    language = "system",
+    entry = "uv",
+    args = ["run", "ruff", "format", "--check"],
+    files = "\\.py$",
+    pass_filenames = false,
+  },
+  {
+    id = "basedpyright",
+    name = "basedpyright",
+    language = "system",
+    entry = "uv",
+    args = ["run", "basedpyright"],
+    files = "\\.py$",
+    pass_filenames = false,
+  },
 ]
