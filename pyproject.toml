@@ -1,15 +1,10 @@
 [build-system]
-requires = ["setuptools>=82.0.0", "Cython>=3.2.4", "packaging>=26.0"]
-build-backend = "setuptools.build_meta"
-
-[dependency-groups]
-dev = [
-    "pytest==8.3.2",
-]
+requires = ["maturin>=1.13,<2"]
+build-backend = "maturin"
 
 [project]
 name = "editdistpy"
-version = "0.2.0"
+version = "0.3.0"
 requires-python = ">=3.9"
 authors = [
     {name = "mmb L"},
@@ -24,12 +19,8 @@ classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Natural Language :: English",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: POSIX",
-    "Operating System :: Unix",
-    "Operating System :: MacOS",
-    "Programming Language :: C++",
-    "Programming Language :: Cython",
+    "Operating System :: OS Independent",
+    "Programming Language :: Rust",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
@@ -38,28 +29,22 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
 [project.urls]
 Repository = "https://github.com/mammothb/editdistpy"
 Changelog = "https://github.com/mammothb/editdistpy/blob/master/CHANGELOG.md"
 
+[dependency-groups]
+dev = [
+    "pytest==8.3.2",
+]
+
 [tool.basedpyright]
 reportUnusedCallResult = "none"
 
-[tool.cibuildwheel]
-skip = "cp36-* cp37-* pp* *_i686 *_ppc64le *_s390x"
-
-environment = {LDFLAGS="-Wl,--strip-all"}
-build-verbosity = "3"
-
-test-command = "pytest --traceconfig -sv {package}/tests"
-test-requires = ["pytest==8.3.2"]
-
-[[tool.cibuildwheel.overrides]]
-select = "*-macosx*"
-environment = {CFLAGS="-g0"}
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["editdistpy"]
+[tool.maturin]
+features = ["pyo3/extension-module", "python"]
+python-source = "python"
+module-name = "editdistpy._editdistpy"
