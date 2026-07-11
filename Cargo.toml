@@ -16,6 +16,7 @@ pyo3 = { version = "0.28.3", features = ["generate-import-lib"] }
 
 [dev-dependencies]
 rstest = { version = "0.26.1" }
+itertools = { version = "0.15" }
 
 [features]
 python = []
