@@ -1,6 +1,6 @@
 """Fast Levenshtein and Damerau optimal string alignment algorithms."""
 
-from typing import Callable
+from collections.abc import Callable
 
 from ._editdistpy import damerau_osa_distance, levenshtein_distance
 
