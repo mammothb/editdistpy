@@ -38,6 +38,7 @@ coverage:
 	cargo llvm-cov --features python --html --output-dir coverage
 
 coverage-ci:
+	mkdir -p coverage
 	cargo llvm-cov --features python --lcov --output-path coverage/lcov.info --fail-under-lines 85
 
 all: fmt lint test build-release
