@@ -11,6 +11,8 @@ on:
       - reopened
   workflow_call:
   workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   sdist:
     name: Build source distribution
