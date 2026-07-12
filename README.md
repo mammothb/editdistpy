@@ -92,35 +92,35 @@ For clarity, the following string pairs were used.
 
 ```
 single_dif string
-        test_damerau_osa               0.5202 usec/pass 1040.36 msec total 2000000 iterations
-        test_levenshtein               0.3547 usec/pass 709.40 msec total 2000000 iterations
-        test_editdistance              0.6399 usec/pass 1279.81 msec total 2000000 iterations
-        test_damerau_osa early_cutoff  0.5134 usec/pass 1026.72 msec total 2000000 iterations
-        test_levenshtein early_cutoff  0.3862 usec/pass 772.31 msec total 2000000 iterations
+        test_damerau_osa               0.3055 usec/pass 611.02 msec total 2000000 iterations
+        test_levenshtein               0.3030 usec/pass 606.05 msec total 2000000 iterations
+        test_editdistance              0.7036 usec/pass 1407.27 msec total 2000000 iterations
+        test_damerau_osa early_cutoff  0.3042 usec/pass 608.37 msec total 2000000 iterations
+        test_levenshtein early_cutoff  0.2997 usec/pass 599.44 msec total 2000000 iterations
 single_sim string
-        test_damerau_osa               0.2983 usec/pass 596.57 msec total 2000000 iterations
-        test_levenshtein               0.2433 usec/pass 486.68 msec total 2000000 iterations
-        test_editdistance              0.3942 usec/pass 788.36 msec total 2000000 iterations
-        test_damerau_osa early_cutoff  0.2865 usec/pass 572.90 msec total 2000000 iterations
-        test_levenshtein early_cutoff  0.2363 usec/pass 472.61 msec total 2000000 iterations
+        test_damerau_osa               0.2379 usec/pass 475.80 msec total 2000000 iterations
+        test_levenshtein               0.2434 usec/pass 486.90 msec total 2000000 iterations
+        test_editdistance              0.4126 usec/pass 825.17 msec total 2000000 iterations
+        test_damerau_osa early_cutoff  0.2234 usec/pass 446.78 msec total 2000000 iterations
+        test_levenshtein early_cutoff  0.2372 usec/pass 474.36 msec total 2000000 iterations
 single_end string
-        test_damerau_osa               0.3332 usec/pass 666.32 msec total 2000000 iterations
-        test_levenshtein               0.3300 usec/pass 659.93 msec total 2000000 iterations
-        test_editdistance              0.7902 usec/pass 1580.42 msec total 2000000 iterations
-        test_damerau_osa early_cutoff  0.3199 usec/pass 639.74 msec total 2000000 iterations
-        test_levenshtein early_cutoff  0.3205 usec/pass 641.01 msec total 2000000 iterations
+        test_damerau_osa               0.2933 usec/pass 586.63 msec total 2000000 iterations
+        test_levenshtein               0.2538 usec/pass 507.57 msec total 2000000 iterations
+        test_editdistance              0.9376 usec/pass 1875.16 msec total 2000000 iterations
+        test_damerau_osa early_cutoff  0.2774 usec/pass 554.73 msec total 2000000 iterations
+        test_levenshtein early_cutoff  0.2497 usec/pass 499.48 msec total 2000000 iterations
 short string
-        test_damerau_osa               0.9925 usec/pass 1984.97 msec total 2000000 iterations
-        test_levenshtein               0.6379 usec/pass 1275.76 msec total 2000000 iterations
-        test_editdistance              0.9587 usec/pass 1917.37 msec total 2000000 iterations
-        test_damerau_osa early_cutoff  0.7535 usec/pass 1506.91 msec total 2000000 iterations
-        test_levenshtein early_cutoff  0.5794 usec/pass 1158.79 msec total 2000000 iterations
+        test_damerau_osa               0.3533 usec/pass 706.55 msec total 2000000 iterations
+        test_levenshtein               0.3772 usec/pass 754.42 msec total 2000000 iterations
+        test_editdistance              1.1646 usec/pass 2329.30 msec total 2000000 iterations
+        test_damerau_osa early_cutoff  0.3515 usec/pass 702.97 msec total 2000000 iterations
+        test_levenshtein early_cutoff  0.3798 usec/pass 759.67 msec total 2000000 iterations
 long string
-        test_damerau_osa               8.6244 usec/pass 17248.73 msec total 2000000 iterations
-        test_levenshtein               4.2367 usec/pass 8473.36 msec total 2000000 iterations
-        test_editdistance              2.0407 usec/pass 4081.31 msec total 2000000 iterations
-        test_damerau_osa early_cutoff  1.0795 usec/pass 2158.99 msec total 2000000 iterations
-        test_levenshtein early_cutoff  0.9031 usec/pass 1806.28 msec total 2000000 iterations
+        test_damerau_osa               1.3348 usec/pass 2669.56 msec total 2000000 iterations
+        test_levenshtein               1.1531 usec/pass 2306.22 msec total 2000000 iterations
+        test_editdistance              2.8700 usec/pass 5740.06 msec total 2000000 iterations
+        test_damerau_osa early_cutoff  1.3383 usec/pass 2676.50 msec total 2000000 iterations
+        test_levenshtein early_cutoff  0.8080 usec/pass 1616.03 msec total 2000000 iterations
 ```
 
 While `max_distance=10` significantly improves the computation time, it may not
