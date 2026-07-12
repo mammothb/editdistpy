@@ -18,7 +18,7 @@ jobs:
     steps:
       - &checkout
         name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
       - name: Build sdist
@@ -27,7 +27,7 @@ jobs:
           command: sdist
           args: --out dist
       - name: Upload artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: sdist
           path: dist
@@ -55,7 +55,7 @@ jobs:
           manylinux: auto
           sccache: "true"
       - name: Upload artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: wheel-linux-${{ matrix.target }}-${{ matrix.python }}
           path: dist
@@ -83,7 +83,7 @@ jobs:
           manylinux: musllinux_1_1
           sccache: "true"
       - name: Upload artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: wheel-musl-${{ matrix.target }}-${{ matrix.python }}
           path: dist
@@ -110,7 +110,7 @@ jobs:
           args: --release --out dist -i ${{ matrix.python }}
           sccache: "true"
       - name: Upload artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: wheel-windows-${{ matrix.target }}-${{ matrix.python }}
           path: dist
@@ -137,7 +137,7 @@ jobs:
           args: --release --out dist -i ${{ matrix.python }}
           sccache: "true"
       - name: Upload artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: wheel-macos-${{ matrix.target }}-${{ matrix.python }}
           path: dist
