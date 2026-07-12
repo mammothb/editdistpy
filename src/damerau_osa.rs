@@ -38,6 +38,7 @@ pub fn distance(string_1: Option<&str>, string_2: Option<&str>, max_distance: i6
 
 fn hyrro2003(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
     let len1 = v1.len();
+    let len2 = v2.len();
 
     let pm = PatternMatchVector::new(v1);
     let last_row_mask = 1u64 << (len1 - 1);
@@ -47,6 +48,13 @@ fn hyrro2003(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
     let mut d0 = 0u64; // persists across columns
     let mut pm_j_old = 0u64; // previous column's Eq
     let mut dist = len1;
+
+    let bounded = score_cutoff < usize::MAX;
+    let mut max_misses = if bounded {
+        score_cutoff + len2 - len1
+    } else {
+        0
+    };
 
     for &c2 in v2 {
         let pm_j = pm.get(c2);
@@ -62,9 +70,28 @@ fn hyrro2003(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
         let mut hp = vn | !(d0 | vp);
         let mut hn = d0 & vp;
 
-        // Score update from last row
-        dist += (hp & last_row_mask != 0) as usize;
-        dist -= (hn & last_row_mask != 0) as usize;
+        // Score update with max_misses budget tracking
+        let hp_hit = hp & last_row_mask != 0;
+        let hn_hit = hn & last_row_mask != 0;
+
+        if hp_hit {
+            if bounded && max_misses < 2 {
+                return -1;
+            }
+            if bounded {
+                max_misses -= 2;
+            }
+            dist += 1;
+        } else if hn_hit {
+            dist -= 1;
+        } else {
+            if bounded && max_misses < 1 {
+                return -1;
+            }
+            if bounded {
+                max_misses -= 1;
+            }
+        }
 
         // Shift down
         hp = (hp << 1) | 1;

@@ -103,6 +103,7 @@ fn fujimoto2018(v1: &[char], v2: &[char], max_distance: i64) -> i32 {
 
 fn hyrro2001(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
     let len1 = v1.len();
+    let len2 = v2.len();
 
     let pm = PatternMatchVector::new(v1);
     let last_row_mask = 1u64 << (len1 - 1);
@@ -110,6 +111,15 @@ fn hyrro2001(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
     let mut vp = !0u64; // all vertical deltas = +1 initially
     let mut vn = 0u64;
     let mut dist = len1; // score = m at column 0
+
+    // Budget for remaining misses; decreases monotonically.
+    // When depleted the distance cannot recover below score_cutoff.
+    let bounded = score_cutoff < usize::MAX;
+    let mut max_misses = if bounded {
+        score_cutoff + len2 - len1
+    } else {
+        0 // unused in unbounded mode
+    };
 
     for &c2 in v2 {
         let eq = pm.get(c2);
@@ -121,9 +131,28 @@ fn hyrro2001(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
         let mut hp = vn | !(d0 | vp);
         let mut hn = d0 & vp;
 
-        // Update score from last row
-        dist += (hp & last_row_mask != 0) as usize;
-        dist -= (hn & last_row_mask != 0) as usize;
+        // Score update with max_misses budget tracking
+        let hp_hit = hp & last_row_mask != 0;
+        let hn_hit = hn & last_row_mask != 0;
+
+        if hp_hit {
+            if bounded && max_misses < 2 {
+                return -1;
+            }
+            if bounded {
+                max_misses -= 2;
+            }
+            dist += 1;
+        } else if hn_hit {
+            dist -= 1;
+        } else {
+            if bounded && max_misses < 1 {
+                return -1;
+            }
+            if bounded {
+                max_misses -= 1;
+            }
+        }
 
         // Shift down: row i becomes row i+1
         hp = (hp << 1) | 1; // top boundary: 0-delta
