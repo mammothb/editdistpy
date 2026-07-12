@@ -14,6 +14,7 @@ pub struct PatternMatchVector {
 
 impl PatternMatchVector {
     pub fn new(s1: &[char]) -> Self {
+        debug_assert!(s1.len() <= 64, "PatternMatchVector requires s1 <= 64 chars");
         let mut ascii = [0u64; 256];
         let mut map = AHashMap::new();
         let mut mask: u64 = 1;
