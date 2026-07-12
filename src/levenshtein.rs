@@ -170,8 +170,10 @@ fn hyrro2001_block(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
         })
         .collect();
 
-    // Initial band width
-    let band_width = (score_cutoff.min((score_cutoff + len1 - len2) / 2) + 1) / 64;
+    // Initial band width (len2 >= len1 after swap, so len2 - len1 is safe)
+    let len_diff = len2 - len1;
+    let band_half = score_cutoff.saturating_add(len_diff) / 2;
+    let band_width = (score_cutoff.min(band_half) + 1) / 64;
     let mut block_start = 0;
     let mut block_end = block_count.min(band_width + 1).saturating_sub(1);
 
@@ -185,11 +187,11 @@ fn hyrro2001_block(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
         for block_idx in block_start..=block_end {
             let eq = pm.get(block_idx, c2);
 
-            // D0: hn_carry OR'd in, it's the carry from previous block's HN<<1
-            let d0 = ((eq & vp[block_idx]).wrapping_add(vp[block_idx]) ^ vp[block_idx])
-                | eq
-                | vn[block_idx]
-                | hn_carry;
+            // D0: hn_carry OR'd into x, propagates carry into the bitwise formula
+            let x = eq | hn_carry;
+            let d0 = ((x & vp[block_idx]).wrapping_add(vp[block_idx]) ^ vp[block_idx])
+                | x
+                | vn[block_idx];
 
             let mut hp = vn[block_idx] | !(d0 | vp[block_idx]);
             let mut hn = d0 & vp[block_idx];
@@ -240,10 +242,10 @@ fn hyrro2001_block(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
 
                 // Process newly added block for current column
                 let eq = pm.get(block_end, c2);
-                let d0 = ((eq & vp[block_end]).wrapping_add(vp[block_end]) ^ vp[block_end])
-                    | eq
-                    | vn[block_end]
-                    | hn_carry;
+                let x = eq | hn_carry;
+                let d0 = ((x & vp[block_end]).wrapping_add(vp[block_end]) ^ vp[block_end])
+                    | x
+                    | vn[block_end];
                 let mut hp = vn[block_end] | !(d0 | vp[block_end]);
                 let mut hn = d0 & vp[block_end];
 
@@ -305,7 +307,9 @@ fn hyrro2001_block(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
 mod tests {
     use super::*;
     use itertools::Itertools;
-    use rstest::rstest;
+    use rand::prelude::*;
+    use rand::rngs::StdRng;
+    use rstest::{fixture, rstest};
 
     /// Reference Levenshtein
     fn reference_lev(s1: &str, s2: &str, max_distance: i64) -> i32 {
@@ -330,14 +334,15 @@ mod tests {
             }
         }
         let dist = d[len1][len2];
-        if dist <= max_distance as i32 {
+        if (dist as i64) <= max_distance {
             dist
         } else {
             -1
         }
     }
 
-    fn permuted_strings() -> Vec<String> {
+    #[fixture]
+    fn strings() -> Vec<String> {
         let alphabet = ['a', 'b', 'c', 'd'];
         let mut result = vec![String::new()];
         for k in 1..=alphabet.len() {
@@ -350,6 +355,26 @@ mod tests {
         result
     }
 
+    fn random_string(len: usize, seed: u64) -> String {
+        let alphabet = b"abcdefghijklmnopqrstuvwxyz";
+        let mut rng = StdRng::seed_from_u64(seed);
+        (0..len)
+            .map(|_| alphabet[rng.random_range(0..26)] as char)
+            .collect()
+    }
+
+    #[fixture]
+    fn long_string_pairs() -> Vec<(String, String)> {
+        (0..30)
+            .map(|i| {
+                let mid_len = 65 + (i * 13) % 136;
+                let mid_a = random_string(mid_len, i as u64 * 2);
+                let mid_b = random_string(mid_len, i as u64 * 2 + 1);
+                (format!("a{}a", mid_a), format!("b{}b", mid_b))
+            })
+            .collect()
+    }
+
     #[rstest]
     #[case(0)]
     #[case(1)] // fujimoto2018
@@ -357,8 +382,8 @@ mod tests {
     #[case(3)] // fujimoto2018
     #[case(4)] // internal_distance
     #[case(i32::MAX as i64)]
-    fn test_against_reference(#[case] max_distance: i64) {
-        let strings = permuted_strings();
+    fn test_against_reference(#[case] max_distance: i64, strings: Vec<String>) {
+        // let strings = permuted_strings();
         for s1 in &strings {
             for s2 in &strings {
                 let expected = reference_lev(s1, s2, max_distance);
@@ -450,5 +475,43 @@ mod tests {
         #[case] expected: i32,
     ) {
         assert_eq!(distance(a, b, max_distance), expected);
+    }
+
+    // ===================================
+    // hyrro2001_block coverage (len > 64)
+    // ===================================
+
+    #[rstest]
+    #[case(0)]
+    #[case(7)]
+    #[case(100)]
+    #[case(300)]
+    #[case(i64::MAX as usize)]
+    fn test_hyrro2001_block_against_reference(
+        #[case] cutoff: usize,
+        long_string_pairs: Vec<(String, String)>,
+    ) {
+        for (s1, s2) in &long_string_pairs {
+            let expected = reference_lev(s1, s2, cutoff as i64);
+            let actual = distance(Some(s1), Some(s2), cutoff as i64);
+            assert_eq!(
+                actual, expected,
+                "lev({:?}, {:?}, {}) = {}, expected {}",
+                s1, s2, cutoff, actual, expected
+            );
+        }
+    }
+
+    #[rstest]
+    fn test_hyrro2001_block_band_exhaustion() {
+        // Disjoint strings: band must shrink to empty
+        let s1 = "x".repeat(130);
+        let s2 = "y".repeat(130);
+        assert_eq!(distance(Some(&s1), Some(&s2), 3), -1);
+
+        // Identical long strings: distance zero
+        let s = "a".repeat(100);
+        assert_eq!(distance(Some(&s), Some(&s), 0), 0);
+        assert_eq!(distance(Some(&s), Some(&s), 5), 0);
     }
 }

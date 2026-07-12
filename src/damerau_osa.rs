@@ -197,7 +197,7 @@ mod tests {
             }
         }
         let dist = d[len1][len2];
-        if dist <= max_distance as i32 {
+        if (dist as i64) <= max_distance {
             dist
         } else {
             -1
