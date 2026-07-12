@@ -270,18 +270,18 @@ mod tests {
         assert_eq!(distance(Some(a), Some(b), max_distance), expected);
     }
 
-    #[test]
-    fn test_max_distance_cutoff() {
-        // identical strings but max_distance=0 should return 0
-        assert_eq!(distance(Some("abc"), Some("abc"), 0), 0);
-        // different strings with max_distance=0 should return -1
-        assert_eq!(distance(Some("abc"), Some("abd"), 0), -1);
-        // within cutoff
-        assert_eq!(distance(Some("abc"), Some("abd"), 1), 1);
-        // exactly at cutoff
-        assert_eq!(distance(Some("abc"), Some("abd"), 1), 1);
-        // one away from cutoff
-        assert_eq!(distance(Some("abc"), Some("xyz"), 2), -1);
+    #[rstest]
+    #[case("abc", "abc", 0, 0)]
+    #[case("abc", "abd", 0, -1)]
+    #[case("abc", "abd", 1, 1)]
+    #[case("abc", "xyz", 2, -1)]
+    fn test_max_distance_cutoff(
+        #[case] a: &str,
+        #[case] b: &str,
+        #[case] max_distance: i64,
+        #[case] expected: i32,
+    ) {
+        assert_eq!(distance(Some(a), Some(b), max_distance), expected);
     }
 
     // ==============================

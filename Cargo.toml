@@ -12,6 +12,7 @@ name = "editdistpy"
 crate-type = ["cdylib"]
 
 [dependencies]
+ahash = { version = "0.8.12" }
 pyo3 = { version = "0.28.3", features = ["generate-import-lib"] }
 
 [dev-dependencies]
