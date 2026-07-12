@@ -231,7 +231,7 @@ mod tests {
     #[case(1)] // fujimoto2018
     #[case(2)] // fujimoto2018
     #[case(3)] // fujimoto2018
-    #[case(4)] // internal_distance / internal_distance_max
+    #[case(4)] // internal_distance
     #[case(i32::MAX as i64)]
     fn test_against_reference(#[case] max_distance: i64) {
         let strings = permuted_strings();
@@ -284,6 +284,24 @@ mod tests {
         assert_eq!(distance(Some("abc"), Some("abd"), 0), -1);
         assert_eq!(distance(Some("abc"), Some("abd"), 1), 1);
         assert_eq!(distance(Some("abc"), Some("xyz"), 2), -1);
+    }
+
+    // ==============================
+    // internal_distance_max coverage
+    // ==============================
+
+    #[rstest]
+    // all chars differ, trimmed len=10 > max=5 -> -1
+    #[case("aa1111111111zz", "aa2222222222zz", 5, -1)]
+    // end chars differ, trimmed len=10 > max=5 -> 2
+    #[case("aa1111111111zz", "aa2111111112zz", 5, 2)]
+    fn test_internal_distance_max(
+        #[case] a: &str,
+        #[case] b: &str,
+        #[case] max_distance: i64,
+        #[case] expected: i32,
+    ) {
+        assert_eq!(distance(Some(a), Some(b), max_distance), expected);
     }
 
     // ==============================
