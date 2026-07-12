@@ -58,3 +58,21 @@ jobs:
         run: make test-rust-python
       - name: Test - Python
         run: make test-python
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - *checkout
+      - *rust-cache
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@2ca9b94c269419b7b0c711c09d0b21c4e1d51145 # v2.83.1
+        with:
+          tool: cargo-llvm-cov
+      - name: Coverage
+        run: make coverage-ci
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage/lcov.info
+          fail_ci_if_error: false
