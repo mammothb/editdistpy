@@ -41,7 +41,7 @@ hooks = [
     language = "system",
     entry = "uv",
     args = ["run", "ruff", "format", "--check"],
-    files = "\\.py$",
+    files = "\\.pyi?$",
     pass_filenames = false,
   },
   {
@@ -50,7 +50,7 @@ hooks = [
     language = "system",
     entry = "uv",
     args = ["run", "basedpyright"],
-    files = "\\.py$",
+    files = "\\.pyi?$",
     pass_filenames = false,
   },
 ]
