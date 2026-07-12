@@ -1,4 +1,5 @@
 use crate::common::{resolve_inputs, trim_affix};
+use crate::pmv::{BlockPatternMatchVector, PatternMatchVector};
 
 #[cfg_attr(not(feature = "python"), allow(dead_code))]
 pub fn distance(string_1: Option<&str>, string_2: Option<&str>, max_distance: i64) -> i32 {
@@ -9,10 +10,12 @@ pub fn distance(string_1: Option<&str>, string_2: Option<&str>, max_distance: i6
     let mut v1: Vec<_> = s1.chars().collect();
     let mut v2: Vec<_> = s2.chars().collect();
 
-    if v1.len() > v2.len() {
+    // v1 must be longer, it becomes the PMV source.
+    // The transposition formula ((!d0)&Eq_j)<<1 & Eq_{j-1} is directional.
+    if v1.len() < v2.len() {
         std::mem::swap(&mut v1, &mut v2);
     }
-    if v2.len() as i64 - v1.len() as i64 > max_distance {
+    if v1.len() as i64 - v2.len() as i64 > max_distance {
         return -1;
     }
 
@@ -21,146 +24,181 @@ pub fn distance(string_1: Option<&str>, string_2: Option<&str>, max_distance: i6
         Err(distance) => return distance,
     };
 
-    if max_distance < t2.len() as i64 {
-        internal_distance_max(t1, t2, max_distance)
+    let cutoff = if max_distance < t1.len() as i64 {
+        max_distance as usize
     } else {
-        internal_distance(t1, t2)
+        usize::MAX
+    };
+    if t1.len() <= 64 {
+        hyrro2003(t1, t2, cutoff)
+    } else {
+        hyrro2003_block(t1, t2, cutoff)
     }
 }
 
-fn internal_distance(v1: &[char], v2: &[char]) -> i32 {
-    let len2 = v2.len();
-
-    let mut prev_char_1_costs = vec![0; len2];
-    let mut char_1_costs: Vec<_> = (0..len2).map(|i| i as i32 + 1).collect();
-
-    let mut char_1 = ' ';
-    let mut curr_cost = 0;
-
-    for (i, &c1) in v1.iter().enumerate() {
-        let prev_char_1 = char_1;
-        char_1 = c1;
-
-        let mut char_2 = ' ';
-        let mut above_char_cost = i as i32;
-        let mut left_char_cost = i as i32;
-        let mut next_trans_cost = 0;
-
-        for j in 0..len2 {
-            let this_trans_cost = next_trans_cost;
-            next_trans_cost = prev_char_1_costs[j];
-
-            // cost of diagnol (substitution)
-            curr_cost = left_char_cost;
-            prev_char_1_costs[j] = left_char_cost;
-
-            // left now equals current cost (which will be diagnol at next
-            // iteration)
-            left_char_cost = char_1_costs[j];
-            let prev_char_2 = char_2;
-            char_2 = v2[j];
-            if char_1 != char_2 {
-                if above_char_cost < curr_cost {
-                    curr_cost = above_char_cost;
-                }
-                if left_char_cost < curr_cost {
-                    curr_cost = left_char_cost;
-                }
-                curr_cost += 1;
-
-                if i != 0
-                    && j != 0
-                    && char_1 == prev_char_2
-                    && prev_char_1 == char_2
-                    && this_trans_cost + 1 < curr_cost
-                {
-                    // transposition
-                    curr_cost = this_trans_cost + 1;
-                }
-            }
-            above_char_cost = curr_cost;
-            char_1_costs[j] = curr_cost;
-        }
-    }
-    curr_cost
-}
-
-fn internal_distance_max(v1: &[char], v2: &[char], max_distance: i64) -> i32 {
+fn hyrro2003(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
     let len1 = v1.len();
     let len2 = v2.len();
-    let max = max_distance as i32;
 
-    let mut prev_char_1_costs = vec![0; len2];
-    let mut char_1_costs: Vec<_> = (0..len2).map(|i| i as i32 + 1).collect();
+    let pm = PatternMatchVector::new(v1);
+    let last_row_mask = 1u64 << (len1 - 1);
 
-    let len_diff = len2 - len1;
-    let j_start_offset = max - len_diff as i32;
-    let mut j_start = 0;
-    let mut j_end = max as usize;
+    let mut vp = !0u64;
+    let mut vn = 0u64;
+    let mut d0 = 0u64; // persists across columns
+    let mut pm_j_old = 0u64; // previous column's Eq
+    let mut dist = len1;
 
-    let mut char_1 = ' ';
-    let mut curr_cost = 0;
+    let bounded = score_cutoff < usize::MAX;
+    let mut max_misses = if bounded {
+        score_cutoff + len2 - len1
+    } else {
+        0
+    };
 
-    for i in 0..len1 {
-        let prev_char_1 = char_1;
-        char_1 = v1[i];
+    for &c2 in v2 {
+        let pm_j = pm.get(c2);
 
-        let mut char_2 = ' ';
-        let mut above_char_cost = i as i32;
-        let mut left_char_cost = i as i32;
-        let mut next_trans_cost = 0;
+        // Transposition check: uses d0 from previous column
+        let tr = (((!d0) & pm_j) << 1) & pm_j_old;
 
-        // no need to look beyond window of lower right diagnol - max_distance
-        // cells (lower right diag is i - len_diff) and upper left diagonal +
-        // max_distance cells (upper left is i)
-        if i as i32 > j_start_offset {
-            j_start += 1;
-        }
-        if j_end < len2 {
-            j_end += 1;
-        }
+        // D0: diagonal-zero mask (same carry trick as Levenshtein)
+        d0 = ((pm_j & vp).wrapping_add(vp) ^ vp) | pm_j | vn;
+        d0 |= tr;
 
-        for j in j_start..j_end {
-            let this_trans_cost = next_trans_cost;
-            next_trans_cost = prev_char_1_costs[j];
+        // Horizontal deltas
+        let mut hp = vn | !(d0 | vp);
+        let mut hn = d0 & vp;
 
-            // cost of diagnol (substitution)
-            curr_cost = left_char_cost;
-            prev_char_1_costs[j] = left_char_cost;
+        // Score update with max_misses budget tracking
+        let hp_hit = hp & last_row_mask != 0;
+        let hn_hit = hn & last_row_mask != 0;
 
-            // left now equals current cost (which will be diagnol at next
-            // iteration)
-            left_char_cost = char_1_costs[j];
-            let prev_char_2 = char_2;
-            char_2 = v2[j];
-            if char_1 != char_2 {
-                if above_char_cost < curr_cost {
-                    curr_cost = above_char_cost;
-                }
-                if left_char_cost < curr_cost {
-                    curr_cost = left_char_cost;
-                }
-                curr_cost += 1;
-
-                if i != 0
-                    && j != 0
-                    && char_1 == prev_char_2
-                    && prev_char_1 == char_2
-                    && this_trans_cost + 1 < curr_cost
-                {
-                    // transposition
-                    curr_cost = this_trans_cost + 1;
-                }
+        if hp_hit {
+            if bounded && max_misses < 2 {
+                return -1;
             }
-            above_char_cost = curr_cost;
-            char_1_costs[j] = curr_cost;
+            if bounded {
+                max_misses -= 2;
+            }
+            dist += 1;
+        } else if hn_hit {
+            dist -= 1;
+        } else {
+            if bounded && max_misses < 1 {
+                return -1;
+            }
+            if bounded {
+                max_misses -= 1;
+            }
         }
 
-        if char_1_costs[i + len_diff] > max {
-            return -1;
+        // Shift down
+        hp = (hp << 1) | 1;
+        hn <<= 1;
+
+        // Next column's vertical deltas
+        vp = hn | !(d0 | hp);
+        vn = hp & d0;
+        pm_j_old = pm_j;
+    }
+
+    if dist <= score_cutoff {
+        dist as i32
+    } else {
+        -1
+    }
+}
+
+/// Per-block state that persists across columns (for transposition detection).
+#[derive(Clone, Copy)]
+struct Row {
+    vp: u64,
+    vn: u64,
+    d0: u64,
+    pm: u64, // pm_j_old for this block
+}
+
+impl Default for Row {
+    fn default() -> Self {
+        Self {
+            vp: !0u64,
+            vn: 0,
+            d0: 0,
+            pm: 0,
         }
     }
-    if curr_cost <= max { curr_cost } else { -1 }
+}
+
+fn hyrro2003_block(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
+    let len1 = v1.len();
+
+    let pm = BlockPatternMatchVector::new(v1);
+    let block_count = pm.size();
+    let last = 1u64 << ((len1 - 1) % 64);
+
+    // old_vecs[0] is a zeroed sentinel
+    // old_vecs[1..=block_count] map to blocks 0..block_count-1
+    let mut old_vecs = vec![Row::default(); block_count + 1];
+    let mut new_vecs = vec![Row::default(); block_count + 1];
+    let mut dist = len1;
+
+    for &c2 in v2 {
+        let mut hp_carry = 1u64;
+        let mut hn_carry = 0u64;
+
+        for block_idx in 0..block_count {
+            let vn = old_vecs[block_idx + 1].vn;
+            let vp = old_vecs[block_idx + 1].vp;
+            let d0_old = old_vecs[block_idx + 1].d0; // previous column's D0
+            let d0_last = old_vecs[block_idx].d0; // prev block's D0, prev column
+            let pm_j_old = old_vecs[block_idx + 1].pm; // prev column's Eq
+            let pm_last = new_vecs[block_idx].pm; // prev block's Eq, current column
+
+            let pm_j = pm.get(block_idx, c2);
+
+            // Cross-block transposition
+            let tr = ((((!d0_old) & pm_j) << 1) | (((!d0_last) & pm_last) >> 63)) & pm_j_old;
+
+            // D0: hn_carry included in x
+            let x = pm_j | hn_carry;
+            let d0 = ((x & vp).wrapping_add(vp) ^ vp) | x | vn | tr;
+
+            let mut hp = vn | !(d0 | vp);
+            let mut hn = d0 & vp;
+
+            // Score update: only the last block contributes to the final
+            // distance. Interior block boundaries aren't the final answer (cf.
+            // hyrro2001_block which tracks per-block scores for band pruning,
+            // then reads only the last).
+            if block_idx + 1 == block_count {
+                dist += (hp & last != 0) as usize;
+                dist -= (hn & last != 0) as usize;
+            }
+
+            // Carry-out
+            let hp_carry_out = hp >> 63;
+            let hn_carry_out = hn >> 63;
+            hp = (hp << 1) | hp_carry;
+            hn = (hn << 1) | hn_carry;
+
+            // Store next-column state
+            new_vecs[block_idx + 1].vp = hn | !(d0 | hp);
+            new_vecs[block_idx + 1].vn = hp & d0;
+            new_vecs[block_idx + 1].d0 = d0;
+            new_vecs[block_idx + 1].pm = pm_j;
+
+            hp_carry = hp_carry_out;
+            hn_carry = hn_carry_out;
+        }
+
+        std::mem::swap(&mut new_vecs, &mut old_vecs);
+    }
+    if dist <= score_cutoff {
+        dist as i32
+    } else {
+        -1
+    }
 }
 
 #[cfg(test)]
@@ -168,7 +206,9 @@ fn internal_distance_max(v1: &[char], v2: &[char], max_distance: i64) -> i32 {
 mod tests {
     use super::*;
     use itertools::Itertools;
-    use rstest::rstest;
+    use rand::prelude::*;
+    use rand::rngs::StdRng;
+    use rstest::{fixture, rstest};
 
     /// Reference Damerau-Levenshtein OSA
     fn reference_osa(s1: &str, s2: &str, max_distance: i64) -> i32 {
@@ -197,7 +237,7 @@ mod tests {
             }
         }
         let dist = d[len1][len2];
-        if dist <= max_distance as i32 {
+        if (dist as i64) <= max_distance {
             dist
         } else {
             -1
@@ -205,7 +245,8 @@ mod tests {
     }
 
     /// All permutations of alphabet "abcd", plus empty string (65 strings).
-    fn permuted_strings() -> Vec<String> {
+    #[fixture]
+    fn strings() -> Vec<String> {
         let alphabet = ['a', 'b', 'c', 'd'];
         let mut result = vec![String::new()];
         for k in 1..=alphabet.len() {
@@ -218,13 +259,32 @@ mod tests {
         result
     }
 
+    fn random_string(len: usize, seed: u64) -> String {
+        let alphabet = b"abcdefghijklmnopqrstuvwxyz";
+        let mut rng = StdRng::seed_from_u64(seed);
+        (0..len)
+            .map(|_| alphabet[rng.random_range(0..26)] as char)
+            .collect()
+    }
+
+    #[fixture]
+    fn long_string_pairs() -> Vec<(String, String)> {
+        (0..30)
+            .map(|i| {
+                let mid_len = 65 + (i * 13) % 136;
+                let mid_a = random_string(mid_len, i as u64 * 2);
+                let mid_b = random_string(mid_len, i as u64 * 2 + 1);
+                (format!("a{}a", mid_a), format!("b{}b", mid_b))
+            })
+            .collect()
+    }
+
     #[rstest]
     #[case(0)]
     #[case(1)]
     #[case(3)]
     #[case(i32::MAX as i64)]
-    fn test_against_reference(#[case] max_distance: i64) {
-        let strings = permuted_strings();
+    fn test_against_reference(#[case] max_distance: i64, strings: Vec<String>) {
         for s1 in &strings {
             for s2 in &strings {
                 let expected = reference_osa(s1, s2, max_distance);
@@ -270,18 +330,18 @@ mod tests {
         assert_eq!(distance(Some(a), Some(b), max_distance), expected);
     }
 
-    #[test]
-    fn test_max_distance_cutoff() {
-        // identical strings but max_distance=0 should return 0
-        assert_eq!(distance(Some("abc"), Some("abc"), 0), 0);
-        // different strings with max_distance=0 should return -1
-        assert_eq!(distance(Some("abc"), Some("abd"), 0), -1);
-        // within cutoff
-        assert_eq!(distance(Some("abc"), Some("abd"), 1), 1);
-        // exactly at cutoff
-        assert_eq!(distance(Some("abc"), Some("abd"), 1), 1);
-        // one away from cutoff
-        assert_eq!(distance(Some("abc"), Some("xyz"), 2), -1);
+    #[rstest]
+    #[case("abc", "abc", 0, 0)]
+    #[case("abc", "abd", 0, -1)]
+    #[case("abc", "abd", 1, 1)]
+    #[case("abc", "xyz", 2, -1)]
+    fn test_max_distance_cutoff(
+        #[case] a: &str,
+        #[case] b: &str,
+        #[case] max_distance: i64,
+        #[case] expected: i32,
+    ) {
+        assert_eq!(distance(Some(a), Some(b), max_distance), expected);
     }
 
     // ==============================
@@ -300,5 +360,43 @@ mod tests {
         #[case] expected: i32,
     ) {
         assert_eq!(distance(a, b, max_distance), expected);
+    }
+
+    // ===================================
+    // hyrro2003_block coverage (len > 64)
+    // ===================================
+
+    #[rstest]
+    #[case(0)]
+    #[case(7)]
+    #[case(100)]
+    #[case(300)]
+    #[case(i64::MAX as usize)]
+    fn test_hyrro2003_block_against_reference(
+        #[case] cutoff: usize,
+        long_string_pairs: Vec<(String, String)>,
+    ) {
+        for (s1, s2) in &long_string_pairs {
+            let expected = reference_osa(s1, s2, cutoff as i64);
+            let actual = distance(Some(s1), Some(s2), cutoff as i64);
+            assert_eq!(
+                actual, expected,
+                "osa({:?}, {:?}, {}) = {}, expected {}",
+                s1, s2, cutoff, actual, expected
+            );
+        }
+    }
+
+    #[rstest]
+    fn test_hyrro2003_block_band_exhaustion() {
+        // Disjoint strings: band must shrink to empty
+        let s1 = "x".repeat(130);
+        let s2 = "y".repeat(130);
+        assert_eq!(distance(Some(&s1), Some(&s2), 3), -1);
+
+        // Identical long strings: distance zero
+        let s = "a".repeat(100);
+        assert_eq!(distance(Some(&s), Some(&s), 0), 0);
+        assert_eq!(distance(Some(&s), Some(&s), 5), 0);
     }
 }

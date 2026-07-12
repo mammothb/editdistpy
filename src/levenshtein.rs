@@ -1,4 +1,5 @@
 use crate::common::{resolve_inputs, trim_affix};
+use crate::pmv::{BlockPatternMatchVector, PatternMatchVector};
 
 #[cfg_attr(not(feature = "python"), allow(dead_code))]
 pub fn distance(string_1: Option<&str>, string_2: Option<&str>, max_distance: i64) -> i32 {
@@ -24,10 +25,15 @@ pub fn distance(string_1: Option<&str>, string_2: Option<&str>, max_distance: i6
     if max_distance < 4 {
         return fujimoto2018(t2, t1, max_distance);
     }
-    if max_distance < t2.len() as i64 {
-        internal_distance_max(t1, t2, max_distance)
+    let cutoff = if max_distance < t2.len() as i64 {
+        max_distance as usize
     } else {
-        internal_distance(t1, t2)
+        usize::MAX
+    };
+    if t1.len() <= 64 {
+        hyrro2001(t1, t2, cutoff)
+    } else {
+        hyrro2001_block(t1, t2, cutoff)
     }
 }
 
@@ -95,85 +101,234 @@ fn fujimoto2018(v1: &[char], v2: &[char], max_distance: i64) -> i32 {
     }
 }
 
-fn internal_distance(v1: &[char], v2: &[char]) -> i32 {
+fn hyrro2001(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
+    let len1 = v1.len();
     let len2 = v2.len();
-    let mut char_1_costs: Vec<_> = (0..len2).map(|j| j as i32 + 1).collect();
-    let mut curr_cost = 0;
 
-    for (i, &c1) in v1.iter().enumerate() {
-        let mut above_char_cost = i as i32;
-        let mut left_char_cost = i as i32;
+    let pm = PatternMatchVector::new(v1);
+    let last_row_mask = 1u64 << (len1 - 1);
 
-        for j in 0..len2 {
-            curr_cost = left_char_cost;
-            left_char_cost = char_1_costs[j];
+    let mut vp = !0u64; // all vertical deltas = +1 initially
+    let mut vn = 0u64;
+    let mut dist = len1; // score = m at column 0
 
-            if c1 != v2[j] {
-                if above_char_cost < curr_cost {
-                    curr_cost = above_char_cost;
-                }
-                if left_char_cost < curr_cost {
-                    curr_cost = left_char_cost;
-                }
-                curr_cost += 1;
+    // Budget for remaining misses; decreases monotonically.
+    // When depleted the distance cannot recover below score_cutoff.
+    let bounded = score_cutoff < usize::MAX;
+    let mut max_misses = if bounded {
+        score_cutoff + len2 - len1
+    } else {
+        0 // unused in unbounded mode
+    };
+
+    for &c2 in v2 {
+        let eq = pm.get(c2);
+
+        // D0: diagonal-zero mask via the carry trick
+        let d0 = ((eq & vp).wrapping_add(vp) ^ vp) | eq | vn;
+
+        // Horizontal deltas
+        let mut hp = vn | !(d0 | vp);
+        let mut hn = d0 & vp;
+
+        // Score update with max_misses budget tracking
+        let hp_hit = hp & last_row_mask != 0;
+        let hn_hit = hn & last_row_mask != 0;
+
+        if hp_hit {
+            if bounded && max_misses < 2 {
+                return -1;
             }
-            above_char_cost = curr_cost;
-            char_1_costs[j] = curr_cost;
+            if bounded {
+                max_misses -= 2;
+            }
+            dist += 1;
+        } else if hn_hit {
+            dist -= 1;
+        } else {
+            if bounded && max_misses < 1 {
+                return -1;
+            }
+            if bounded {
+                max_misses -= 1;
+            }
         }
-    }
 
-    curr_cost
+        // Shift down: row i becomes row i+1
+        hp = (hp << 1) | 1; // top boundary: 0-delta
+        hn <<= 1;
+
+        // Next column's vertical deltals
+        vp = hn | !(d0 | hp);
+        vn = hp & d0;
+    }
+    if dist <= score_cutoff {
+        dist as i32
+    } else {
+        -1
+    }
 }
 
-fn internal_distance_max(v1: &[char], v2: &[char], max_distance: i64) -> i32 {
+/// 0-indexed row number of the last row in `block_idx`.
+fn row_num(block_idx: usize, block_count: usize, len1: usize) -> usize {
+    if block_idx + 1 == block_count {
+        len1 - 1
+    } else {
+        (block_idx + 1) * 64 - 1
+    }
+}
+
+fn hyrro2001_block(v1: &[char], v2: &[char], score_cutoff: usize) -> i32 {
+    let len1 = v1.len();
     let len2 = v2.len();
-    let max = max_distance as i32;
-    let mut char_1_costs: Vec<_> = (0..len2)
-        .map(|j| {
-            let val = j as i32 + 1;
-            if val < max + 1 { val } else { max + 1 }
+
+    let pm = BlockPatternMatchVector::new(v1);
+    let block_count = pm.size();
+    let last = 1u64 << ((len1 - 1) % 64);
+
+    // Per-block state: vertical deltas and distance at each block boundary
+    let mut vp = vec![!0u64; block_count];
+    let mut vn = vec![0u64; block_count];
+    let mut scores: Vec<_> = (0..block_count)
+        .map(|b| {
+            if b + 1 == block_count {
+                len1
+            } else {
+                (b + 1) * 64
+            }
         })
         .collect();
 
-    let len_diff = len2 - v1.len();
-    let j_start_offset = max - len_diff as i32;
-    let mut j_start = 0;
-    let mut j_end = max as usize;
-    let mut curr_cost = 0;
+    // Initial band width (len2 >= len1 after swap, so len2 - len1 is safe)
+    let len_diff = len2 - len1;
+    let band_half = score_cutoff.saturating_add(len_diff) / 2;
+    let band_width = (score_cutoff.min(band_half) + 1) / 64;
+    let mut block_start = 0;
+    let mut block_end = block_count.min(band_width + 1).saturating_sub(1);
 
-    for (i, &c1) in v1.iter().enumerate() {
-        let mut above_char_cost = i as i32;
-        let mut left_char_cost = i as i32;
+    let score_cutoff = score_cutoff.min(len2);
 
-        if i as i32 > j_start_offset {
-            j_start += 1;
-        }
-        if j_end < len2 {
-            j_end += 1;
-        }
+    for (j, &c2) in v2.iter().enumerate() {
+        let mut hp_carry = 1u64; // 0-delta at row 0 (top boundary)
+        let mut hn_carry = 0u64;
 
-        for j in j_start..j_end {
-            curr_cost = left_char_cost;
-            left_char_cost = char_1_costs[j];
+        // Process active block
+        for block_idx in block_start..=block_end {
+            let eq = pm.get(block_idx, c2);
 
-            if c1 != v2[j] {
-                if above_char_cost < curr_cost {
-                    curr_cost = above_char_cost;
-                }
-                if left_char_cost < curr_cost {
-                    curr_cost = left_char_cost;
-                }
-                curr_cost += 1;
+            // D0: hn_carry OR'd into x, propagates carry into the bitwise formula
+            let x = eq | hn_carry;
+            let d0 = ((x & vp[block_idx]).wrapping_add(vp[block_idx]) ^ vp[block_idx])
+                | x
+                | vn[block_idx];
+
+            let mut hp = vn[block_idx] | !(d0 | vp[block_idx]);
+            let mut hn = d0 & vp[block_idx];
+
+            // Update score: last row is last bit (last block) or bit 63 (interior)
+            if block_idx + 1 == block_count {
+                scores[block_idx] += (hp & last != 0) as usize;
+                scores[block_idx] -= (hn & last != 0) as usize;
+            } else {
+                scores[block_idx] += (hp >> 63) as usize;
+                scores[block_idx] -= (hn >> 63) as usize;
             }
-            above_char_cost = curr_cost;
-            char_1_costs[j] = curr_cost;
+
+            // Carry-out: bit 63 propagates to next block's shift
+            let hp_carry_out = hp >> 63;
+            let hn_carry_out = hn >> 63;
+
+            hp = (hp << 1) | hp_carry;
+            hn = (hn << 1) | hn_carry;
+
+            vp[block_idx] = hn | !(d0 | hp);
+            vn[block_idx] = hp & d0;
+
+            hp_carry = hp_carry_out;
+            hn_carry = hn_carry_out;
         }
-        if char_1_costs[i + len_diff] > max {
-            return -1;
+
+        // Band expansion (right)
+        if block_end + 1 < block_count {
+            let rn = row_num(block_end, block_count, len1);
+            if rn as isize
+                <= score_cutoff as isize + 2 * 64_isize + j as isize + len1 as isize
+                    - scores[block_end] as isize
+                    - 2
+                    - len2 as isize
+            {
+                block_end += 1;
+                vp[block_end] = !0u64;
+                vn[block_end] = 0u64;
+
+                let chars_in_block = if block_end + 1 == block_count {
+                    (len1 - 1) % 64 + 1
+                } else {
+                    64
+                };
+                scores[block_end] =
+                    scores[block_end - 1] + chars_in_block - hp_carry as usize + hn_carry as usize;
+
+                // Process newly added block for current column
+                let eq = pm.get(block_end, c2);
+                let x = eq | hn_carry;
+                let d0 = ((x & vp[block_end]).wrapping_add(vp[block_end]) ^ vp[block_end])
+                    | x
+                    | vn[block_end];
+                let mut hp = vn[block_end] | !(d0 | vp[block_end]);
+                let mut hn = d0 & vp[block_end];
+
+                if block_end + 1 == block_count {
+                    scores[block_end] += (hp & last != 0) as usize;
+                    scores[block_end] -= (hn & last != 0) as usize;
+                } else {
+                    scores[block_end] += (hp >> 63) as usize;
+                    scores[block_end] -= (hn >> 63) as usize;
+                }
+
+                hp = (hp << 1) | hp_carry;
+                hn = (hn << 1) | hn_carry;
+                vp[block_end] = hn | !(d0 | hp);
+                vn[block_end] = hp & d0;
+            }
+        }
+
+        // Band shrinking
+        while block_end >= block_start {
+            let in_band_cond1 = scores[block_end] < score_cutoff + 64;
+            let in_band_cond2 = row_num(block_end, block_count, len1) as isize
+                <= score_cutoff as isize + 2 * 64_isize + j as isize + len1 as isize + 1
+                    - scores[block_end] as isize
+                    - 2
+                    - len2 as isize;
+            if in_band_cond1 && in_band_cond2 {
+                break;
+            }
+            block_end = block_end.saturating_sub(1);
+        }
+
+        while block_start <= block_end {
+            let in_band_cond1 = scores[block_start] < score_cutoff + 64;
+            let in_band_cond2 = row_num(block_start, block_count, len1) as isize
+                >= scores[block_start] as isize + len1 as isize + j as isize
+                    - score_cutoff as isize
+                    - len2 as isize;
+            if in_band_cond1 && in_band_cond2 {
+                break;
+            }
+            block_start += 1;
+        }
+
+        if block_end < block_start {
+            return -1; // band empty, no match possible
         }
     }
-
-    if curr_cost <= max { curr_cost } else { -1 }
+    let dist = scores[block_count - 1];
+    if dist <= score_cutoff {
+        dist as i32
+    } else {
+        -1
+    }
 }
 
 #[cfg(test)]
@@ -181,7 +336,9 @@ fn internal_distance_max(v1: &[char], v2: &[char], max_distance: i64) -> i32 {
 mod tests {
     use super::*;
     use itertools::Itertools;
-    use rstest::rstest;
+    use rand::prelude::*;
+    use rand::rngs::StdRng;
+    use rstest::{fixture, rstest};
 
     /// Reference Levenshtein
     fn reference_lev(s1: &str, s2: &str, max_distance: i64) -> i32 {
@@ -206,14 +363,15 @@ mod tests {
             }
         }
         let dist = d[len1][len2];
-        if dist <= max_distance as i32 {
+        if (dist as i64) <= max_distance {
             dist
         } else {
             -1
         }
     }
 
-    fn permuted_strings() -> Vec<String> {
+    #[fixture]
+    fn strings() -> Vec<String> {
         let alphabet = ['a', 'b', 'c', 'd'];
         let mut result = vec![String::new()];
         for k in 1..=alphabet.len() {
@@ -226,6 +384,26 @@ mod tests {
         result
     }
 
+    fn random_string(len: usize, seed: u64) -> String {
+        let alphabet = b"abcdefghijklmnopqrstuvwxyz";
+        let mut rng = StdRng::seed_from_u64(seed);
+        (0..len)
+            .map(|_| alphabet[rng.random_range(0..26)] as char)
+            .collect()
+    }
+
+    #[fixture]
+    fn long_string_pairs() -> Vec<(String, String)> {
+        (0..30)
+            .map(|i| {
+                let mid_len = 65 + (i * 13) % 136;
+                let mid_a = random_string(mid_len, i as u64 * 2);
+                let mid_b = random_string(mid_len, i as u64 * 2 + 1);
+                (format!("a{}a", mid_a), format!("b{}b", mid_b))
+            })
+            .collect()
+    }
+
     #[rstest]
     #[case(0)]
     #[case(1)] // fujimoto2018
@@ -233,8 +411,8 @@ mod tests {
     #[case(3)] // fujimoto2018
     #[case(4)] // internal_distance
     #[case(i32::MAX as i64)]
-    fn test_against_reference(#[case] max_distance: i64) {
-        let strings = permuted_strings();
+    fn test_against_reference(#[case] max_distance: i64, strings: Vec<String>) {
+        // let strings = permuted_strings();
         for s1 in &strings {
             for s2 in &strings {
                 let expected = reference_lev(s1, s2, max_distance);
@@ -278,12 +456,18 @@ mod tests {
         assert_eq!(distance(Some(a), Some(b), max_distance), expected);
     }
 
-    #[test]
-    fn test_max_distance_cutoff() {
-        assert_eq!(distance(Some("abc"), Some("abc"), 0), 0);
-        assert_eq!(distance(Some("abc"), Some("abd"), 0), -1);
-        assert_eq!(distance(Some("abc"), Some("abd"), 1), 1);
-        assert_eq!(distance(Some("abc"), Some("xyz"), 2), -1);
+    #[rstest]
+    #[case("abc", "abc", 0, 0)]
+    #[case("abc", "abd", 0, -1)]
+    #[case("abc", "abd", 1, 1)]
+    #[case("abc", "xyz", 2, -1)]
+    fn test_max_distance_cutoff(
+        #[case] a: &str,
+        #[case] b: &str,
+        #[case] max_distance: i64,
+        #[case] expected: i32,
+    ) {
+        assert_eq!(distance(Some(a), Some(b), max_distance), expected);
     }
 
     // ==============================
@@ -320,5 +504,43 @@ mod tests {
         #[case] expected: i32,
     ) {
         assert_eq!(distance(a, b, max_distance), expected);
+    }
+
+    // ===================================
+    // hyrro2001_block coverage (len > 64)
+    // ===================================
+
+    #[rstest]
+    #[case(0)]
+    #[case(7)]
+    #[case(100)]
+    #[case(300)]
+    #[case(i64::MAX as usize)]
+    fn test_hyrro2001_block_against_reference(
+        #[case] cutoff: usize,
+        long_string_pairs: Vec<(String, String)>,
+    ) {
+        for (s1, s2) in &long_string_pairs {
+            let expected = reference_lev(s1, s2, cutoff as i64);
+            let actual = distance(Some(s1), Some(s2), cutoff as i64);
+            assert_eq!(
+                actual, expected,
+                "lev({:?}, {:?}, {}) = {}, expected {}",
+                s1, s2, cutoff, actual, expected
+            );
+        }
+    }
+
+    #[rstest]
+    fn test_hyrro2001_block_band_exhaustion() {
+        // Disjoint strings: band must shrink to empty
+        let s1 = "x".repeat(130);
+        let s2 = "y".repeat(130);
+        assert_eq!(distance(Some(&s1), Some(&s2), 3), -1);
+
+        // Identical long strings: distance zero
+        let s = "a".repeat(100);
+        assert_eq!(distance(Some(&s), Some(&s), 0), 0);
+        assert_eq!(distance(Some(&s), Some(&s), 5), 0);
     }
 }

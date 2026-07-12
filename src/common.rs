@@ -161,7 +161,7 @@ mod tests {
         assert_eq!(trim_affix(&va, &vb, max_distance), Err(expected));
     }
 
-    #[test]
+    #[rstest]
     fn test_trim_affix_unicode() {
         // multi-byte codepoints: trim should work at char level, not byte level
         let va = chars("héllö");
@@ -172,7 +172,7 @@ mod tests {
         assert_eq!(tb, chars("o").as_slice());
     }
 
-    #[test]
+    #[rstest]
     fn test_trim_affix_long_common_prefix() {
         let va = chars("prefixXXXXsuffix");
         let vb = chars("prefixYYYYsuffix");
