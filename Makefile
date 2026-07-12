@@ -1,4 +1,4 @@
-.PHONY: sync build-dev build-release clean test-rust test-rust-python test-python test fmt lint all
+.PHONY: sync build-dev build-release clean test-rust test-rust-python test-python test fmt lint all coverage coverage-ci
 
 sync:
 	uv sync --group dev
@@ -11,7 +11,7 @@ build-release:
 
 clean:
 	cargo clean
-	rm -rf dist .pytest_cache
+	rm -rf dist .pytest_cache coverage
 	find . -name __pycache__ -exec rm -rf {} +
 
 fmt: sync
@@ -33,5 +33,11 @@ test-python: build-dev
 	uv run --no-project pytest
 
 test: test-rust test-rust-python test-python
+
+coverage:
+	cargo llvm-cov --features python --html --output-dir coverage
+
+coverage-ci:
+	cargo llvm-cov --features python --lcov --output-path coverage/lcov.info --fail-under-lines 85
 
 all: fmt lint test build-release
