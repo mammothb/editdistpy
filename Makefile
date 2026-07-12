@@ -1,18 +1,37 @@
-.PHONY: clean install reinstall uninstall
+.PHONY: sync build-dev build-release clean test-rust test-rust-python test-python test fmt lint all
+
+sync:
+	uv sync --group dev
+
+build-dev: sync
+	uv run maturin develop --uv
+
+build-release:
+	uv run maturin build --release
 
 clean:
-	$(RM) -r build dist ./*.egg-info
-	$(RM) -r editdistpy/[!_]*.cpp
-	$(RM) -r .pytest_cache
-	find . -name __pycache__ -exec $(RM) -r {} +
+	cargo clean
+	rm -rf dist .pytest_cache
+	find . -name __pycache__ -exec rm -rf {} +
 
-test: reinstall
-	pytest
+fmt: sync
+	cargo fmt -- --check
+	uv run --no-project ruff format --check .
 
-install:
-	pip install -v .
+lint: sync
+	cargo clippy -- -D warnings
+	cargo clippy --features python -- -D warnings
+	uv run --no-project basedpyright .
 
-reinstall: clean uninstall install
+test-rust:
+	cargo test
 
-uninstall:
-	pip uninstall -y editdistpy
+test-rust-python:
+	cargo test --features python
+
+test-python: build-dev
+	uv run --no-project pytest
+
+test: test-rust test-rust-python test-python
+
+all: fmt lint test build-release

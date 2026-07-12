@@ -4,12 +4,19 @@ on:
     inputs:
       pypi_repo:
         description: "Repo to upload to (TestPyPI or PyPI)"
+        type: choice
         default: "testpypi"
-        required: true
+        options:
+          - "testpypi"
+          - "pypi"
+permissions:
+  contents: read
 jobs:
   build_wheels:
+    name: Build wheels
     uses: ./.github/workflows/wheels.yml
   test-publish:
+    name: Publish - TestPyPI
     if: ${{ github.event.inputs.pypi_repo == 'testpypi' }}
     runs-on: ubuntu-latest
     environment:
@@ -19,27 +26,18 @@ jobs:
       id-token: write
     needs: [build_wheels]
     steps:
-      - name: Download wheels and sdist
-        uses: actions/download-artifact@v8
+      - &download-artifact
+        name: Download Artifacts - Wheels and sdist
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          pattern: artifact-*
-          path: ./download
-      - name: Copy to dist
-        run: |
-          [ -d dist ] && rm -rf dist
-          mkdir dist
-          cp ./download/*/*.whl ./dist
-          cp ./download/*/*.tar.gz ./dist
-        shell: bash
-      - name: Show files to upload
-        run: |
-          ls -la dist
-        shell: bash
+          merge-multiple: true
+          path: ./dist
       - name: Publish package to TestPyPI
-        uses: pypa/gh-action-pypi-publish@v1.14.0
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0
         with:
           repository_url: https://test.pypi.org/legacy/
   publish:
+    name: Publish - PyPI
     if: ${{ github.event.inputs.pypi_repo == 'pypi' }}
     runs-on: ubuntu-latest
     environment:
@@ -49,21 +47,6 @@ jobs:
       id-token: write
     needs: [build_wheels]
     steps:
-      - name: Download wheels and sdist
-        uses: actions/download-artifact@v8
-        with:
-          pattern: artifact-*
-          path: ./download
-      - name: Copy to dist
-        run: |
-          [ -d dist ] && rm -rf dist
-          mkdir dist
-          cp ./download/*/*.whl ./dist
-          cp ./download/*/*.tar.gz ./dist
-        shell: bash
-      - name: Show files to upload
-        run: |
-          ls -la dist
-        shell: bash
+      - *download-artifact
       - name: Publish package to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.14.0
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # v1.14.0

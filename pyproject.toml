@@ -1,16 +1,11 @@
 [build-system]
-requires = ["setuptools>=82.0.0", "Cython>=3.2.4", "packaging>=26.0"]
-build-backend = "setuptools.build_meta"
-
-[dependency-groups]
-dev = [
-    "pytest==8.3.2",
-]
+requires = ["maturin>=1.13,<2"]
+build-backend = "maturin"
 
 [project]
 name = "editdistpy"
-version = "0.2.0"
-requires-python = ">=3.9"
+version = "0.3.0"
+requires-python = ">=3.10"
 authors = [
     {name = "mmb L"},
 ]
@@ -24,19 +19,15 @@ classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Natural Language :: English",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: POSIX",
-    "Operating System :: Unix",
-    "Operating System :: MacOS",
-    "Programming Language :: C++",
-    "Programming Language :: Cython",
+    "Operating System :: OS Independent",
+    "Programming Language :: Rust",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation :: CPython",
 ]
 
@@ -44,22 +35,41 @@ classifiers = [
 Repository = "https://github.com/mammothb/editdistpy"
 Changelog = "https://github.com/mammothb/editdistpy/blob/master/CHANGELOG.md"
 
+[dependency-groups]
+dev = [
+    "basedpyright==1.39.3",
+    "editdistance==0.8.1",
+    "maturin==1.13.3",
+    "pytest==9.1.1",
+    "ruff==0.15.12",
+]
+
 [tool.basedpyright]
 reportUnusedCallResult = "none"
 
-[tool.cibuildwheel]
-skip = "cp36-* cp37-* pp* *_i686 *_ppc64le *_s390x"
+[tool.ruff]
+line-length = 88
 
-environment = {LDFLAGS="-Wl,--strip-all"}
-build-verbosity = "3"
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
 
-test-command = "pytest --traceconfig -sv {package}/tests"
-test-requires = ["pytest==8.3.2"]
+[tool.ruff.lint.isort]
+known-first-party = ["editdistpy"]
 
-[[tool.cibuildwheel.overrides]]
-select = "*-macosx*"
-environment = {CFLAGS="-g0"}
+[tool.ruff.format]
+quote-style = "double"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["editdistpy"]
+[tool.maturin]
+features = ["pyo3/extension-module", "python"]
+python-source = "python"
+module-name = "editdistpy._editdistpy"
+
+[tool.uv]
+cache-keys = [
+    { file = "**/*.rs" },
+    { file = "Cargo.lock" },
+    { file = "Cargo.toml" },
+    { file = "pyproject.toml" },
+    { file = "python/**/*" },
+    { file = "rust-toolchain.toml" },
+]

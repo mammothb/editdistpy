@@ -1,0 +1,6 @@
+def levenshtein_distance(
+    string_1: str | None, string_2: str | None, max_distance: int
+) -> int: ...
+def damerau_osa_distance(
+    string_1: str | None, string_2: str | None, max_distance: int
+) -> int: ...
