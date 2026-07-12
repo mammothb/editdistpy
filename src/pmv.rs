@@ -59,12 +59,12 @@ impl BlockPatternMatchVector {
         let mut maps = vec![AHashMap::new(); block_count];
         for (i, &c) in s1.iter().enumerate() {
             let block_idx = i / 64;
-            let bit = 1u64 << (i % 64);
+            let mask = 1u64 << (i % 64);
             let u = c as u32;
             if u < 256 {
-                ascii[block_idx][u as usize] |= bit;
+                ascii[block_idx][u as usize] |= mask;
             } else {
-                *maps[block_idx].entry(c).or_insert(0) |= bit;
+                *maps[block_idx].entry(c).or_insert(0) |= mask;
             }
         }
         Self { ascii, maps }
