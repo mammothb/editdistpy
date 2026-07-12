@@ -1,6 +1,12 @@
-.PHONY: build clean dev test fmt lint all
+.PHONY: sync build-dev build-release clean test-rust test-rust-python test-python test fmt lint all
 
-build:
+sync:
+	uv sync --group dev
+
+build-dev: sync
+	maturin develop --uv
+
+build-release:
 	maturin build --release
 
 clean:
@@ -8,22 +14,24 @@ clean:
 	rm -rf dist .pytest_cache
 	find . -name __pycache__ -exec rm -rf {} +
 
-dev:
-	uv sync --group dev
-	maturin develop --uv
-
-fmt:
+fmt: sync
 	cargo fmt -- --check
 	uv run --no-project ruff format --check .
 
-lint:
+lint: sync
 	cargo clippy -- -D warnings
 	cargo clippy --features python -- -D warnings
 	uv run --no-project basedpyright .
 
-test: dev
+test-rust:
 	cargo test
+
+test-rust-python:
 	cargo test --features python
+
+test-python: build-dev
 	uv run --no-project pytest
 
-all: fmt lint test build
+test: test-rust test-rust-python test-python
+
+all: fmt lint test build-release
