@@ -10,6 +10,7 @@ permissions:
 env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: 1
+  UV_LOCKED: 1
 jobs:
   lint:
     name: Lint & Format
