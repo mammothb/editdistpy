@@ -24,7 +24,9 @@ def expected_levenshtein(string_1: str, string_2: str, max_distance: int) -> int
     return distance if distance <= max_distance else -1
 
 
-def actual_levenshtein(string_1: str | None, string_2: str | None, max_distance: int) -> int:
+def actual_levenshtein(
+    string_1: str | None, string_2: str | None, max_distance: int
+) -> int:
     if string_1 is None or string_2 is None:
         return null_distance_results(string_1, string_2, max_distance)
     if max_distance <= 0:
@@ -59,12 +61,13 @@ class TestLevenshtein:
 
         for s1 in strings:
             for s2 in strings:
-                assert expected_levenshtein(s1, s2, max_distance) == levenshtein.distance(
+                assert expected_levenshtein(
                     s1, s2, max_distance
-                )
+                ) == levenshtein.distance(s1, s2, max_distance)
 
     def test_comparer_null_distance(
-        self, get_short_and_long_strings: list[tuple[str | None, str | None, dict[str, int]]]
+        self,
+        get_short_and_long_strings: list[tuple[str | None, str | None, dict[str, int]]],
     ):
         for s1, s2, expected in get_short_and_long_strings:
             distance = levenshtein.distance(s1, s2, 10)

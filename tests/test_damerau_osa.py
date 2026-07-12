@@ -28,7 +28,9 @@ def expected_damerau_osa(string_1: str, string_2: str, max_distance: int) -> int
     return distance if distance <= max_distance else -1
 
 
-def actual_damerau_osa(string_1: str | None, string_2: str | None, max_distance: int) -> int:
+def actual_damerau_osa(
+    string_1: str | None, string_2: str | None, max_distance: int
+) -> int:
     if string_1 is None or string_2 is None:
         return null_distance_results(string_1, string_2, max_distance)
     if max_distance <= 0:
@@ -62,12 +64,13 @@ class TestDamerauOsa:
 
         for s1 in strings:
             for s2 in strings:
-                assert expected_damerau_osa(s1, s2, max_distance) == damerau_osa.distance(
+                assert expected_damerau_osa(
                     s1, s2, max_distance
-                )
+                ) == damerau_osa.distance(s1, s2, max_distance)
 
     def test_comparer_null_distance(
-        self, get_short_and_long_strings: list[tuple[str | None, str | None, dict[str, int]]]
+        self,
+        get_short_and_long_strings: list[tuple[str | None, str | None, dict[str, int]]],
     ):
         for s1, s2, expected in get_short_and_long_strings:
             distance = damerau_osa.distance(s1, s2, 10)
