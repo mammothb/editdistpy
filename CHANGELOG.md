@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.4.0 (2026-07-12)
+-------------------
+- Rewrite core from Cython/C++ to Rust.
+- Replace DP algorithm with bit-parallel Myers/Hyyro algorithms
+- Drop Python 3.9 support.
+- Add Python 3.14 support.
+
 v0.2.0 (2026-02-13)
 -------------------
 - Fix build on macOS
