@@ -4,10 +4,10 @@ sync:
 	uv sync --group dev
 
 build-dev: sync
-	maturin develop --uv
+	uv run maturin develop --uv
 
 build-release:
-	maturin build --release
+	uv run maturin build --release
 
 clean:
 	cargo clean

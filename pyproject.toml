@@ -40,6 +40,7 @@ Changelog = "https://github.com/mammothb/editdistpy/blob/master/CHANGELOG.md"
 dev = [
     "basedpyright==1.39.3",
     "editdistance==0.8.1",
+    "maturin==1.13.3",
     "pytest==8.3.2",
     "ruff==0.15.12",
 ]
