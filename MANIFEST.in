@@ -1,3 +1,0 @@
-graft editdistpy
-
-global-exclude *.py[ocd]
