@@ -30,7 +30,7 @@ jobs:
           command: sdist
           args: --out dist
       - name: Upload artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: sdist
           path: dist
@@ -58,7 +58,7 @@ jobs:
           manylinux: auto
           sccache: ${{ github.event_name != 'pull_request' }}
       - name: Upload artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: wheel-linux-${{ matrix.target }}-${{ matrix.python }}
           path: dist
@@ -86,7 +86,7 @@ jobs:
           manylinux: musllinux_1_1
           sccache: ${{ github.event_name != 'pull_request' }}
       - name: Upload artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: wheel-musl-${{ matrix.target }}-${{ matrix.python }}
           path: dist
@@ -113,7 +113,7 @@ jobs:
           args: --release --out dist -i ${{ matrix.python }}
           sccache: ${{ github.event_name != 'pull_request' }}
       - name: Upload artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: wheel-windows-${{ matrix.target }}-${{ matrix.python }}
           path: dist
@@ -140,7 +140,7 @@ jobs:
           args: --release --out dist -i ${{ matrix.python }}
           sccache: ${{ github.event_name != 'pull_request' }}
       - name: Upload artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: wheel-macos-${{ matrix.target }}-${{ matrix.python }}
           path: dist
