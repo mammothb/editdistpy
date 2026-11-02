@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.5.0 (2026-11-02)
+-------------------
+- Drop Python 3.10 support
+- Add Python 3.15 support
+
 v0.4.0 (2026-07-12)
 -------------------
 - Rewrite core from Cython/C++ to Rust.
