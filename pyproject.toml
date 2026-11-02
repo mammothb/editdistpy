@@ -4,8 +4,8 @@ build-backend = "maturin"
 
 [project]
 name = "editdistpy"
-version = "0.4.0"
-requires-python = ">=3.10"
+version = "0.5.0"
+requires-python = ">=3.11"
 authors = [
     {name = "mmb L"},
 ]
